@@ -24,8 +24,8 @@ body{padding-left:max(0px, env(safe-area-inset-left,0px));padding-right:max(0px,
 #vig{position:fixed;inset:0;pointer-events:none;background:radial-gradient(130% 110% at 55% 45%, transparent 55%, rgba(0,0,0,.55) 100%)}
 #flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:radial-gradient(80% 80% at 60% 40%, rgba(255,214,160,.55), rgba(255,180,120,0) 70%);mix-blend-mode:screen}
 #dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
-#viewport{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none}
-#root{position:relative;width:1600px;height:900px;transform-origin:center;flex:none}
+#viewport{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+#root{position:absolute;left:50%;top:50%;width:1600px;height:900px;margin:-450px 0 0 -800px;transform-origin:center center}
 .scene{position:absolute;inset:0;pointer-events:none}
 .scene.on{pointer-events:auto}
 [data-s]{opacity:0}
@@ -81,6 +81,8 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 #notes{position:fixed;left:50%;bottom:calc(74px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(860px,calc(100% - 32px));background:rgba(10,8,6,.92);color:var(--cream);border:1px solid var(--glass-line);border-radius:16px;padding:16px 20px;font:500 16px/1.5 var(--body);z-index:6}
 #load{position:fixed;inset:0;display:grid;place-items:center;background:var(--night);z-index:9;font:700 13px/1 var(--body);letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
 #hint{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);font:700 11px/1 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--cream-2);background:rgba(22,16,12,.55);border:1px solid var(--glass-line);padding:9px 14px;border-radius:999px;z-index:6;opacity:0}
+#rot{position:fixed;inset:0;z-index:20;display:none;place-items:center;text-align:center;background:var(--night);color:var(--cream);font:700 18px/1.5 var(--body);padding:24px}
+@media (orientation:portrait) and (max-width:700px){#rot{display:grid}}
 </style>
 </head>
 <body>
@@ -228,10 +230,12 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 <div id="notes" hidden></div>
 <div id="ctl"><button id="bPrev" aria-label="Eelmine">‹</button><button id="bNext" aria-label="Järgmine">›</button><button id="bNotes" aria-label="Märkmed">N</button><button id="bFull" aria-label="Täisekraan">⤢</button></div>
 <div id="load">Laen…</div>
+<div id="rot">Keera telefon põiki 🔄<br><span style="font-weight:500;color:var(--muted)">Esitlus on tehtud laiale ekraanile</span></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="gsap.min.js"></script>
 <script>
-(() => {
+if (!window.gsap) { document.getElementById("load").remove(); const st = document.createElement("style"); st.textContent = "[data-s]{opacity:1!important} .bg#bg-plain{opacity:1}"; document.head.append(st); }
+else (() => {
 const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const D = (d) => (RM ? 0.01 : d);
 const $ = (q, r = document) => r.querySelector(q), $$ = (q, r = document) => [...r.querySelectorAll(q)];
@@ -319,7 +323,7 @@ const els = (s, f) => $$("[data-s]", s).filter(f);
 const hooks = {
   1(k, back) {
     $$(".pane", scenes[1]).forEach((p, i) => { if (i === k) { gsap.set(p, { display: "block" }); gsap.fromTo(p.children, { opacity: 0, y: back ? -36 : 36, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: D(1.1), delay: D(0.55), stagger: 0.09, ease: "expo.out" }); } else if (getComputedStyle(p).display !== "none") gsap.to(p.children, { opacity: 0, y: back ? 36 : -36, filter: "blur(8px)", duration: D(0.45), stagger: 0.03, ease: "power3.in", onComplete: () => gsap.set(p, { display: "none" }) }); });
-    $$(".pol", scenes[1]).forEach((p, i) => { if (i === k) gsap.fromTo(p, { opacity: 0, y: 120, rotate: (i - 1) * 8 - 10, scale: 0.9 }, { opacity: 1, y: 0, rotate: [-4, 3, -2][i], scale: 1, duration: D(1.4), delay: D(0.8), ease: "expo.out" }); else gsap.to(p, { opacity: 0, y: -60, duration: D(0.5), ease: "power3.in" }); });
+    $$(".pol", scenes[1]).forEach((p, i) => { if (i === k) gsap.fromTo(p, { opacity: 0, y: 120, rotate: (i - 1) * 8 - 10, scale: 0.9 }, { opacity: 1, y: 0, rotate: [-4, 3, -2][i], scale: 1, duration: D(1.4), delay: D(0.8), ease: "expo.out", overwrite: true }); else gsap.to(p, { opacity: 0, y: -60, duration: D(0.5), ease: "power3.in", overwrite: true }); });
   },
   4(k) {
     const cards = $$(".src", scenes[4]), pr = $("#principle");
@@ -356,7 +360,7 @@ function go(n) {
   }
   if (hooks[si]) hooks[si](k, back);
   $("#bar i").style.width = ((n + 1) / steps.length) * 100 + "%";
-  $("#count").textContent = String(n + 1).padStart(2, "0") + " / " + steps.length;
+  $("#count").textContent = "SLAID " + (si + 1) + " / " + scenes.length;
   $("#notes").textContent = s.dataset.notes || "";
 }
 const next = () => go(cur + 1), prev = () => go(cur - 1);
@@ -390,7 +394,7 @@ $$(".quiz").forEach((q) => {
 });
 /* ---------- boot after images load ---------- */
 const srcs = ["plain", "usa", "fr", "ee", "court", "vote"].map((n) => `img/${n}.jpg`).concat(["img/cap.webp", "img/bas.webp", "img/too.webp", "img/h_usa.jpg", "img/h_bastille.jpg", "img/h_ddhc.jpg"]);
-Promise.all(srcs.map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; }))).then(() => {
+Promise.race([Promise.all(srcs.map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; }))), new Promise((r) => setTimeout(r, 6000))]).then(() => {
   $$("[data-s]").forEach((e) => gsap.set(e, { opacity: 0 }));
   gsap.set($$(".pane", scenes[1]), { display: "none" }); gsap.set($$(".pol"), { opacity: 0 }); gsap.set("#principle", { opacity: 0 });
   gsap.to("#load", { opacity: 0, duration: 0.8, onComplete: () => $("#load").remove() });
