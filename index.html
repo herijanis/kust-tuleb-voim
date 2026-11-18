@@ -17,13 +17,13 @@
 }
 html,body{height:100%;margin:0;overflow:hidden;background:var(--night);color:var(--cream);font-family:var(--body)}
 body{padding-left:max(0px, env(safe-area-inset-left,0px));padding-right:max(0px, env(safe-area-inset-right,0px))}
-#world{position:fixed;inset:-24px;will-change:transform}
-.bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;will-change:transform,opacity,filter,clip-path}
-#shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(14,10,8,.82) 0%, rgba(14,10,8,.55) 34%, rgba(14,10,8,.08) 62%, rgba(14,10,8,0) 100%),linear-gradient(0deg, rgba(14,10,8,.55) 0%, rgba(14,10,8,0) 32%);transition:opacity 1.2s}
+
+
+
 #grain{position:fixed;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:overlay}
 #vig{position:fixed;inset:0;pointer-events:none;background:radial-gradient(130% 110% at 55% 45%, transparent 55%, rgba(0,0,0,.55) 100%)}
 #flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:radial-gradient(80% 80% at 60% 40%, rgba(255,214,160,.55), rgba(255,180,120,0) 70%);mix-blend-mode:screen}
-#dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+
 #viewport{position:fixed;inset:0;pointer-events:none;overflow:hidden}
 #root{position:absolute;left:50%;top:50%;width:1600px;height:900px;margin:-450px 0 0 -800px;transform-origin:center center}
 .scene{position:absolute;inset:0;pointer-events:none}
@@ -48,12 +48,12 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 .polaroid{position:absolute;background:#F4EDE2;padding:10px 10px 34px;box-shadow:0 30px 60px -18px rgba(0,0,0,.7);transform:rotate(-4deg)}
 .polaroid img{display:block;width:100%;height:100%;object-fit:cover}
 .polaroid span{position:absolute;left:12px;right:12px;bottom:9px;font:600 italic 14px/1 var(--display);color:#4A3F35}
-.rise{position:absolute;inset:0}
-.b{position:absolute;overflow:hidden}
-.b img{position:absolute;left:0;bottom:0;width:100%;display:block;filter:drop-shadow(0 30px 25px rgba(0,0,0,.45))}
-.shadow{position:absolute;height:44px;border-radius:50%;background:radial-gradient(closest-side, rgba(0,0,0,.55), rgba(0,0,0,0));opacity:0}
-.lbl{position:absolute;transform:translateX(-50%);font:800 13px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--cream);white-space:nowrap}
-.lbl b{font:500 italic 30px/1 var(--display);letter-spacing:0;color:var(--gold);display:block;margin-bottom:6px;text-align:center}
+
+
+
+
+
+
 .tbl{position:absolute;left:96px;top:250px;width:1408px;display:grid;grid-template-columns:260px repeat(3,1fr);gap:0;border-radius:20px;overflow:hidden;border:1px solid var(--glass-line);background:rgba(22,16,12,.66);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .tbl>div{padding:16px 18px;font-size:18px;line-height:1.42;border-top:1px solid rgba(255,236,214,.09);border-left:1px solid rgba(255,236,214,.09)}
 .tbl .h{font:800 14px/1.2 var(--body);letter-spacing:.16em;text-transform:uppercase;border-top:0;color:var(--c)}
@@ -83,36 +83,36 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 #hint{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);font:700 11px/1 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--cream-2);background:rgba(22,16,12,.55);border:1px solid var(--glass-line);padding:9px 14px;border-radius:999px;z-index:6;opacity:0}
 #rot{position:fixed;inset:0;z-index:20;display:none;place-items:center;text-align:center;background:var(--night);color:var(--cream);font:700 18px/1.5 var(--body);padding:24px}
 @media (orientation:portrait) and (max-width:700px){#rot{display:grid}}
+
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block}
+#world{position:fixed;inset:-24px;pointer-events:none}
+.bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;will-change:transform,opacity,filter,clip-path}
+#shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(14,10,8,.72) 0%, rgba(14,10,8,.42) 32%, rgba(14,10,8,0) 60%),linear-gradient(0deg, rgba(14,10,8,.35) 0%, rgba(14,10,8,0) 30%)}
+#black{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none}
+#labels{position:fixed;inset:0;pointer-events:none}
+.lbl3{position:absolute;transform:translate(-50%,0);font:800 13px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--cream);white-space:nowrap;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.lbl3 b{font:500 italic 34px/1 var(--display);letter-spacing:0;color:var(--gold);display:block;margin-bottom:6px}
+#load b{display:block;margin-top:10px;color:var(--gold)}
 </style>
 </head>
 <body>
-
+<canvas id="gl" aria-hidden="true"></canvas>
 <div id="world">
-  <div class="bg" id="bg-plain" style="background-image:url(img/plain.jpg)"></div>
-  <div class="bg" id="bg-usa" style="background-image:url(img/usa.jpg)"></div>
-  <div class="bg" id="bg-fr" style="background-image:url(img/fr.jpg)"></div>
   <div class="bg" id="bg-ee" style="background-image:url(img/ee.jpg)"></div>
-  <div class="bg" id="bg-court" style="background-image:url(img/court.jpg)"></div>
   <div class="bg" id="bg-vote" style="background-image:url(img/vote.jpg)"></div>
+  <div class="bg" id="bg-court" style="background-image:url(img/court.jpg)"></div>
   <div class="bg" id="bg-splitL" style="background-image:url(img/usa.jpg);background-position:60% center"></div>
   <div class="bg" id="bg-splitR" style="background-image:url(img/fr.jpg);background-position:75% center"></div>
 </div>
 <div id="shade"></div>
-<canvas id="dust" aria-hidden="true"></canvas>
 <canvas id="grain" aria-hidden="true"></canvas>
 <div id="vig"></div>
 <div id="flash"></div>
-
+<div id="black"></div>
+<div id="labels"><div class="lbl3"><b>1776</b>USA</div><div class="lbl3"><b>1789</b>Prantsusmaa</div><div class="lbl3"><b>1992</b>Eesti</div></div>
 <div id="viewport"><div id="root">
-  <div class="rise" id="rise">
-    <div class="shadow" style="left:70px;width:560px;top:770px"></div><div class="shadow" style="left:560px;width:500px;top:752px"></div><div class="shadow" style="left:1060px;width:500px;top:768px"></div>
-    <div class="b" style="left:60px;top:300px;width:560px;height:492px"><img src="img/cap.webp" alt="USA Kapitoolium"></div>
-    <div class="b" style="left:560px;top:250px;width:500px;height:524px"><img src="img/bas.webp" alt="Bastille"></div>
-    <div class="b" style="left:1080px;top:200px;width:470px;height:590px"><img src="img/too.webp" alt="Toompea loss ja Pikk Hermann"></div>
-    <div class="lbl" style="left:340px;top:812px"><b>1776</b>USA</div><div class="lbl" style="left:810px;top:812px"><b>1789</b>Prantsusmaa</div><div class="lbl" style="left:1305px;top:812px"><b>1992</b>Eesti</div>
-  </div>
 
-<!-- 0 TITLE: the three landmarks rise out of the ground -->
+  <!-- 0 TITLE: the three landmarks rise out of the ground -->
 <section class="scene" data-bg="plain" data-steps="1" data-notes="Tere! Meie teema: kust tuleb riigis võim. Võrdleme USA iseseisvusdeklaratsiooni (1776), Prantsusmaa inimõiguste deklaratsiooni (1789) ja tänapäeva Eesti põhiseadust (1992).">
 
   <div data-s="0" class="kick" style="position:absolute;left:96px;top:70px">Ajalugu · rühmatöö</div>
@@ -131,9 +131,6 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
     <div class="pane" style="--c:#9CC3EA"><span class="tag">Taust · Eesti · allikas C</span><div class="year">1992</div>
       <ul class="tl"><li><b>§ 1</b><span>Kõrgeima riigivõimu kandja on rahvas</span></li><li><b>§ 57</b><span>Riigikogu valivad kodanikud alates 18, salaja (§ 60)</span></li><li><b>§ 4</b><span>Võimud tasakaalustavad üksteist; kohus sõltumatu (§ 146)</span></li><li><b>§ 45</b><span>Sõnavabadus; võrdsus (§ 12); õigus kohtusse (§ 15)</span></li></ul></div>
   </div>
-  <div class="polaroid pol" style="left:600px;top:540px;width:260px;height:190px"><img src="img/h_usa.jpg" alt=""><span>J. Trumbull, 1819</span></div>
-  <div class="polaroid pol" style="left:600px;top:540px;width:260px;height:190px;transform:rotate(3deg)"><img src="img/h_bastille.jpg" alt=""><span>Bastille' vallutamine, 1789</span></div>
-  <div class="polaroid pol" style="left:600px;top:540px;width:200px;height:250px;transform:rotate(-2deg)"><img src="img/h_ddhc.jpg" alt=""><span>Õiguste deklaratsioon</span></div>
 </section>
 
 <!-- 2 ÜL 1 -->
@@ -222,93 +219,192 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
   <p data-s="0" style="position:absolute;left:0;right:0;bottom:56px;text-align:center;margin:0;font-size:14px;color:var(--muted)">Allikad: tunni lugemistekst (allikad A–C). Pildid: J. Trumbull 1819, „Prise de la Bastille“, J.-J.-F. Le Barbier (avalik omand); stseenid loodud tehisaruga.</p>
 </section>
 
-</div></div>
 
+</div></div>
 <div id="hint">Edasi: klõps, tühik või → · N = märkmed · F = täisekraan</div>
 <div id="count"></div>
 <div id="bar"><i></i></div>
 <div id="notes" hidden></div>
 <div id="ctl"><button id="bPrev" aria-label="Eelmine">‹</button><button id="bNext" aria-label="Järgmine">›</button><button id="bNotes" aria-label="Märkmed">N</button><button id="bFull" aria-label="Täisekraan">⤢</button></div>
-<div id="load">Laen…</div>
-<div id="rot">Keera telefon põiki 🔄<br><span style="font-weight:500;color:var(--muted)">Esitlus on tehtud laiale ekraanile</span></div>
-
-<script src="gsap.min.js"></script>
+<div id="load">Laen 3D-maailma<b>0%</b></div>
+<div id="rot">Keera telefon põiki<br><span style="font-weight:500;color:var(--muted)">Esitlus on tehtud laiale ekraanile</span></div>
+<script src="lib/three.min.js"></script>
+<script src="lib/GLTFLoader.js"></script>
+<script src="lib/gsap.min.js"></script>
 <script>
-if (!window.gsap) { document.getElementById("load").remove(); const st = document.createElement("style"); st.textContent = "[data-s]{opacity:1!important} .bg#bg-plain{opacity:1}"; document.head.append(st); }
-else (() => {
+(() => {
 const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const D = (d) => (RM ? 0.01 : d);
 const $ = (q, r = document) => r.querySelector(q), $$ = (q, r = document) => [...r.querySelectorAll(q)];
-/* ---------- film grain (static noise, drifts) ---------- */
-const g = $("#grain"), gx = g.getContext("2d"); g.width = 256; g.height = 256;
-const gi = gx.createImageData(256, 256); for (let i = 0; i < gi.data.length; i += 4) { const v = Math.random() * 255; gi.data[i] = gi.data[i + 1] = gi.data[i + 2] = v; gi.data[i + 3] = 255; } gx.putImageData(gi, 0, 0);
-g.style.width = "100%"; g.style.height = "100%"; g.style.imageRendering = "pixelated";
-/* ---------- dust particles ---------- */
-const dc = $("#dust"), dx = dc.getContext("2d"); let parts = [];
-function sizeDust() { dc.width = innerWidth * devicePixelRatio; dc.height = innerHeight * devicePixelRatio; }
-function emit(x, y, n, spread) { for (let i = 0; i < n; i++) parts.push({ x: x + (Math.random() - 0.5) * spread, y: y + Math.random() * 10, vx: (Math.random() - 0.5) * 2.2, vy: -Math.random() * 2.4 - 0.4, r: 6 + Math.random() * 26, a: 0.35 + Math.random() * 0.35, life: 1, rock: Math.random() < 0.18 }); }
-function dustLoop() {
-  dx.clearRect(0, 0, dc.width, dc.height);
-  parts = parts.filter((p) => p.life > 0);
-  for (const p of parts) {
-    p.x += p.vx; p.y += p.vy; p.vy += p.rock ? 0.18 : -0.006; p.vx *= 0.99; p.life -= p.rock ? 0.02 : 0.009; p.r *= p.rock ? 1 : 1.012;
-    const s = devicePixelRatio;
-    if (p.rock) { dx.fillStyle = `rgba(70,52,36,${p.life})`; dx.fillRect(p.x * s, p.y * s, 3 * s, 3 * s); }
-    else { const gr = dx.createRadialGradient(p.x * s, p.y * s, 0, p.x * s, p.y * s, p.r * s); gr.addColorStop(0, `rgba(214,178,132,${p.a * p.life})`); gr.addColorStop(1, "rgba(214,178,132,0)"); dx.fillStyle = gr; dx.beginPath(); dx.arc(p.x * s, p.y * s, p.r * s, 0, 7); dx.fill(); }
-  }
-  requestAnimationFrame(dustLoop);
-}
+/* ---------- film grain ---------- */
+{ const g = $("#grain"), x = g.getContext("2d"); g.width = g.height = 256; const im = x.createImageData(256, 256); for (let i = 0; i < im.data.length; i += 4) { const v = Math.random() * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } x.putImageData(im, 0, 0); }
 /* ---------- layout scale ---------- */
 const root = $("#root"); let S = 1;
-function resize() { S = Math.min(innerWidth / 1600, innerHeight / 900); root.style.transform = `scale(${S})`; sizeDust(); }
+/* ---------- THREE: a real 3D world ---------- */
+const canvas = $("#gl");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+const HORIZON = new THREE.Color(0xD99366);
+scene.fog = new THREE.Fog(HORIZON, 60, 240);
+const camera = new THREE.PerspectiveCamera(35, 1, 0.5, 2000);
+// sky dome: in r128 fog is mixed after output encoding, so the sky shader outputs raw colours and its horizon equals the fog colour (no seam)
+const sky = new THREE.Mesh(new THREE.SphereGeometry(900, 48, 24), new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, fog: false,
+  uniforms: { top: { value: new THREE.Color(0x2B2E4C) }, mid: { value: new THREE.Color(0xB06B5E) }, bot: { value: HORIZON }, sunDir: { value: new THREE.Vector3(-0.55, 0.1, -0.83).normalize() } },
+  vertexShader: "varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }",
+  fragmentShader: "uniform vec3 top, mid, bot, sunDir; varying vec3 vP; void main(){ float h = vP.y; vec3 c = h > 0.2 ? mix(mid, top, smoothstep(0.2, 0.8, h)) : mix(bot, mid, smoothstep(0.0, 0.2, h)); float s = max(dot(vP, sunDir), 0.0); c += vec3(1.0,0.75,0.45) * (pow(s, 40.0) * 0.8 + pow(s, 6.0) * 0.18) * smoothstep(0.0, 0.1, h); gl_FragColor = vec4(c, 1.0); }" }));
+scene.add(sky);
+scene.add(new THREE.HemisphereLight(0xFFE3C4, 0x5A4532, 0.75));
+const sun = new THREE.DirectionalLight(0xFFC892, 2.4); sun.position.set(-80, 55, 70); sun.castShadow = true;
+sun.shadow.mapSize.set(4096, 4096); Object.assign(sun.shadow.camera, { left: -80, right: 80, top: 60, bottom: -60, near: 1, far: 300 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03; sun.shadow.radius = 3;
+scene.add(sun);
+const rim = new THREE.DirectionalLight(0xFF9A6A, 0.6); rim.position.set(60, 20, -80); scene.add(rim);
+// ground: painted dry-grass texture
+function groundTex() {
+  const c = document.createElement("canvas"); c.width = c.height = 512; const x = c.getContext("2d");
+  x.fillStyle = "#7A5A36"; x.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 9000; i++) { const h = 28 + Math.random() * 14, l = 22 + Math.random() * 30; x.fillStyle = `hsla(${h},${40 + Math.random() * 25}%,${l}%,${0.25 + Math.random() * 0.4})`; const px = Math.random() * 512, py = Math.random() * 512; x.fillRect(px, py, 1 + Math.random() * 2, 3 + Math.random() * 7); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(70, 70); t.anisotropy = 8; t.encoding = THREE.sRGBEncoding; return t;
+}
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(1600, 1600, 1, 1), new THREE.MeshStandardMaterial({ map: groundTex(), roughness: 1, color: 0xC9A47A }));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+// dust: pooled soft sprites + debris
+function softTex() { const c = document.createElement("canvas"); c.width = c.height = 128; const x = c.getContext("2d"); const g = x.createRadialGradient(64, 64, 0, 64, 64, 64); g.addColorStop(0, "rgba(230,196,150,0.9)"); g.addColorStop(0.5, "rgba(210,170,120,0.35)"); g.addColorStop(1, "rgba(200,160,110,0)"); x.fillStyle = g; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c); }
+const dustTex = softTex(), puffs = [];
+for (let i = 0; i < 260; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: dustTex, transparent: true, depthWrite: false, opacity: 0 })); sp.visible = false; scene.add(sp); puffs.push({ sp, life: 0 }); }
+const rockGeo = new THREE.DodecahedronGeometry(0.18), rockMat = new THREE.MeshStandardMaterial({ color: 0x5B4632, roughness: 1 }), rocks = [];
+for (let i = 0; i < 90; i++) { const r = new THREE.Mesh(rockGeo, rockMat); r.visible = false; r.castShadow = true; scene.add(r); rocks.push({ r, v: new THREE.Vector3(), life: 0 }); }
+function burstDust(x, z, radius) {
+  let n = 0;
+  for (const p of puffs) { if (p.life > 0) continue; const a = Math.random() * Math.PI * 2, d = radius * (0.6 + Math.random() * 0.5);
+    p.sp.position.set(x + Math.cos(a) * d, 0.5 + Math.random(), z + Math.sin(a) * d); p.v = new THREE.Vector3(Math.cos(a) * (0.03 + Math.random() * 0.05), 0.02 + Math.random() * 0.05, Math.sin(a) * (0.03 + Math.random() * 0.05)); p.s = 2 + Math.random() * 3; p.life = 1; p.sp.visible = true; if (++n > 26) break; }
+  n = 0;
+  for (const q of rocks) { if (q.life > 0) continue; const a = Math.random() * Math.PI * 2; q.r.position.set(x + Math.cos(a) * radius * 0.8, 0.3, z + Math.sin(a) * radius * 0.8); q.v.set(Math.cos(a) * (0.05 + Math.random() * 0.12), 0.18 + Math.random() * 0.22, Math.sin(a) * (0.05 + Math.random() * 0.12)); q.life = 1; q.r.visible = true; if (++n > 9) break; }
+}
+function stepDust() {
+  for (const p of puffs) if (p.life > 0) { p.life -= 0.008; p.sp.position.add(p.v); p.v.multiplyScalar(0.985); p.s += 0.05; p.sp.scale.setScalar(p.s); p.sp.material.opacity = Math.max(0, p.life) * 0.75; if (p.life <= 0) p.sp.visible = false; }
+  for (const q of rocks) if (q.life > 0) { q.life -= 0.012; q.r.position.add(q.v); q.v.y -= 0.012; q.r.rotation.x += 0.2; if (q.r.position.y < 0.15) { q.r.position.y = 0.15; q.v.multiplyScalar(0.4); } if (q.life <= 0) q.r.visible = false; }
+}
+// landmarks (real 3D GLB models)
+const SPOTS = [{ file: "models/cap.glb", x: -24, z: 0, w: 22, ry: 0.25 }, { file: "models/bas.glb", x: 0, z: -7, w: 17, ry: 0 }, { file: "models/too.glb", x: 24, z: 0, w: 20, ry: -0.25 }];
+const L = [];
+const LBL_OK = [];
+function placeModel(gltf, s) {
+  const m = gltf.scene; m.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; if (o.material) { o.material.side = THREE.FrontSide; if (o.material.map) o.material.map.anisotropy = 8; } } });
+  const box = new THREE.Box3().setFromObject(m), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+  const k = s.w / Math.max(size.x, size.z); m.scale.setScalar(k); m.position.set(-c.x * k, -box.min.y * k, -c.z * k);
+  const g = new THREE.Group(); g.add(m); g.position.set(s.x, 0, s.z); g.rotation.y = s.ry; scene.add(g);
+  g.userData.h = size.y * k; g.position.y = -g.userData.h - 1; return g;
+}
+/* ---------- camera choreography ---------- */
+const POSES = {
+  title: [0, 10, 70, 0, 8, 0, 35], usa: [-38, 8, 28, -30, 7, 0, 32], fr: [12, 10, 26, -6, 7, -7, 32], ee: [40, 12, 30, 17, 9, 0, 32],
+  aerial: [0, 85, 55, 0, 0, -6, 35], usafr: [-14, 12, 50, -14, 8, -4, 34], wide: [0, 4, 64, 0, 11, 0, 36], court: [20, 2.5, 22, 30, 12, 0, 40],
+  golden: [-62, 30, 52, 4, 6, 0, 34], orbit: [0, 30, 70, 0, 4, 0, 36], end: [0, 26, 105, 0, 8, 0, 34],
+};
+const cam = { px: 0, py: 40, pz: 160, tx: 0, ty: 6, tz: 0, fov: 40 }, shake = { a: 0 }, blur = { b: 0, d: 1 };
+function flyTo(n, dur = 2.6, ease = "power3.inOut") { const p = POSES[n]; gsap.to(cam, { px: p[0], py: p[1], pz: p[2], tx: p[3], ty: p[4], tz: p[5], fov: p[6], duration: D(dur), ease, overwrite: true }); }
+function dim(on) { gsap.to(blur, { b: on ? 7 * on : 0, d: on ? 1 - 0.35 * on : 1, duration: D(1.4), ease: "power2.inOut", onUpdate: () => (canvas.style.filter = blur.b > 0.05 ? `blur(${blur.b}px) brightness(${blur.d})` : "none") }); }
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); S = Math.min(w / 1600, h / 900); root.style.transform = `scale(${S})`; }
 addEventListener("resize", resize); resize();
-const toScreen = (x, y) => { const r = root.getBoundingClientRect(); return [r.left + x * S, r.top + y * S]; };
-/* ---------- backgrounds: camera moves ---------- */
-const BG = { plain: $("#bg-plain"), usa: $("#bg-usa"), fr: $("#bg-fr"), ee: $("#bg-ee"), court: $("#bg-court"), vote: $("#bg-vote") };
-let curBg = null; const drift = new Map();
-function kenBurns(el) { drift.get(el)?.kill(); const dir = Math.random() < 0.5 ? -1 : 1; drift.set(el, gsap.fromTo(el, { scale: 1.06, xPercent: 0 }, { scale: 1.0, xPercent: dir * 1.2, duration: D(16), ease: "sine.inOut", overwrite: false })); }
-function hideSplit() { gsap.to(["#bg-splitL", "#bg-splitR"], { opacity: 0, duration: D(0.8) }); }
-// dolly forward: old frame rushes past the camera, new frame settles in
-function dolly(name, dim) {
-  const el = BG[name]; if (el === curBg) { gsap.to(el, { filter: `blur(${dim ? 6 : 0}px) brightness(${dim ? 0.7 : 1})`, duration: D(1.2) }); return; }
-  const old = curBg; curBg = el; hideSplit();
+const lbls = $$(".lbl3"), v3 = new THREE.Vector3(); let t0 = performance.now(), orbitOn = false, orbitA = 0;
+function frame(now) {
+  const t = (now - t0) / 1000, dr = RM ? 0 : 1;
+  if (orbitOn) { orbitA += 0.0012 * dr; cam.px = Math.sin(orbitA) * 72; cam.pz = Math.cos(orbitA) * 72; }
+  const a = shake.a;
+  camera.position.set(cam.px + Math.sin(t * 0.17) * 1.2 * dr + (Math.random() - 0.5) * a, cam.py + Math.sin(t * 0.23) * 0.5 * dr + (Math.random() - 0.5) * a * 0.7, cam.pz + Math.cos(t * 0.13) * 1.0 * dr);
+  camera.lookAt(cam.tx, cam.ty, cam.tz); if (Math.abs(camera.fov - cam.fov) > 0.01) { camera.fov = cam.fov; camera.updateProjectionMatrix(); }
+  stepDust(); renderer.render(scene, camera);
+  L.forEach((g, i) => { const el = lbls[i]; if (!el) return; v3.set(g.position.x, g.position.y - 0.5, g.position.z + 6).project(camera); el.style.left = ((v3.x + 1) / 2) * innerWidth + "px"; el.style.top = ((1 - v3.y) / 2) * innerHeight + "px"; });
+  requestAnimationFrame(frame);
+}
+function riseIntro() {
+  const tl = gsap.timeline({ delay: D(0.6) });
+  L.forEach((g, i) => {
+    const at = i * 1.0;
+    tl.to(shake, { a: 0.55, duration: 0.3, ease: "power2.out" }, at)
+      .to(g.position, { y: 0, duration: D(3.0), ease: "power4.out" }, at)
+      .to(shake, { a: 0, duration: 2.6, ease: "power2.out" }, at + 0.4)
+      .call(() => { let n = 0; const iv = setInterval(() => { burstDust(g.position.x, g.position.z, SPOTS[i].w * 0.55); if (++n > 7) clearInterval(iv); }, 150); }, null, at);
+  });
+  tl.to(lbls, { opacity: 1, y: 0, duration: D(1.2), stagger: 0.2, ease: "expo.out" }, 3.4);
+}
+
+/* ---------- the gallery inside the Capitol: three paintings ---------- */
+const G = new THREE.Vector3(0, -260, -40), WALL = G.z - 9;
+const PAINT = [{ img: "img/h_usa.jpg", x: -13 }, { img: "img/h_bastille.jpg", x: 0 }, { img: "img/ee.jpg", x: 13 }];
+function woodTex() { const c = document.createElement("canvas"); c.width = 512; c.height = 512; const x = c.getContext("2d"); for (let i = 0; i < 8; i++) { x.fillStyle = `hsl(24,${38 + (i % 3) * 6}%,${20 + (i % 2) * 4}%)`; x.fillRect(0, i * 64, 512, 64); x.fillStyle = "rgba(0,0,0,.25)"; x.fillRect(0, i * 64, 512, 2); } for (let i = 0; i < 1400; i++) { x.fillStyle = `rgba(${60 + Math.random() * 40},${35 + Math.random() * 20},20,.18)`; x.fillRect(Math.random() * 512, Math.random() * 512, 30 + Math.random() * 120, 1); } const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(5, 3); t.encoding = THREE.sRGBEncoding; return t; }
+const gallery = new THREE.Group(); gallery.position.copy(G); scene.add(gallery);
+{
+  const nofog = (m) => { m.fog = false; return m; };
+  const room = new THREE.Mesh(new THREE.BoxGeometry(46, 14, 26), [0, 1, 2, 3, 4, 5].map((i) => nofog(i === 3 ? new THREE.MeshStandardMaterial({ map: woodTex(), roughness: 0.55, side: THREE.BackSide }) : new THREE.MeshStandardMaterial({ color: i === 2 ? 0x120C0A : 0x3A1A18, roughness: 0.95, side: THREE.BackSide }))));
+  room.position.set(0, 7, 4); room.receiveShadow = true; gallery.add(room);
+  const trim = nofog(new THREE.MeshStandardMaterial({ color: 0x2A1A14, roughness: 0.7 }));
+  const wain = new THREE.Mesh(new THREE.BoxGeometry(46, 2.6, 0.3), trim); wain.position.set(0, 1.3, -8.85); gallery.add(wain);
+  const gold = nofog(new THREE.MeshStandardMaterial({ color: 0xC9A15A, metalness: 0.75, roughness: 0.35 }));
+  const tl = new THREE.TextureLoader();
+  PAINT.forEach((p, i) => {
+    const tex = tl.load(p.img, (t) => { const a = t.image.width / t.image.height; const h = 5.6, w = Math.min(9.5, h * a); p.w = w; p.h = h; plane.scale.set(w, h, 1); [[0, h / 2 + 0.3, w + 1.2, 0.6], [0, -h / 2 - 0.3, w + 1.2, 0.6], [-w / 2 - 0.3, 0, 0.6, h], [w / 2 + 0.3, 0, 0.6, h]].forEach(([fx, fy, fw, fh]) => { const f = new THREE.Mesh(new THREE.BoxGeometry(fw, fh, 0.35), gold); f.position.set(p.x + fx, 6 + fy, -8.7); f.castShadow = true; gallery.add(f); }); });
+    tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 8;
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), nofog(new THREE.MeshStandardMaterial({ map: tex, roughness: 0.6, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.28 })));
+    plane.position.set(p.x, 6, -8.78); gallery.add(plane); p.plane = plane;
+    const sp = new THREE.SpotLight(0xFFD7A8, 4.5, 26, 0.42, 0.6, 1.2); sp.position.set(p.x, 13, -3); sp.target.position.set(p.x, 6, -8.8); gallery.add(sp); gallery.add(sp.target);
+    const bench = new THREE.Mesh(new THREE.BoxGeometry(4.5, 0.9, 1.4), trim); bench.position.set(p.x, 0.45, -1.5); gallery.add(bench);
+  });
+  const pl = new THREE.PointLight(0xFFB27A, 0.6, 40); pl.position.set(0, 10, 6); gallery.add(pl);
+}
+const galPose = (i, close) => { const x = G.x + PAINT[i].x, y = G.y + 6; return close ? [x, y, G.z - 7.6, x, y, WALL, 40] : [x - 7.6, y - 0.3, G.z + 8.5, x - 4.9, y - 0.1, WALL, 40]; };
+/* ---------- photo environments (inside the paintings) ---------- */
+const BG = { ee: $("#bg-ee"), vote: $("#bg-vote"), court: $("#bg-court") }; let curBg = null; const drift = new Map();
+function kenBurns(el) { drift.get(el)?.kill(); drift.set(el, gsap.fromTo(el, { scale: 1.06, xPercent: 0 }, { scale: 1.0, xPercent: (Math.random() < 0.5 ? -1 : 1) * 1.2, duration: D(16), ease: "sine.inOut" })); }
+function photosOff(d = 1.0) { [curBg, $("#bg-splitL"), $("#bg-splitR")].forEach((el) => el && gsap.to(el, { opacity: 0, duration: D(d) })); curBg = null; }
+function canvasOn(on, d = 1.0) { gsap.to(canvas, { opacity: on ? 1 : 0, duration: D(d), ease: "power2.inOut" }); }
+function photo(name, dim) {
+  const el = BG[name]; if (el === curBg) return; const old = curBg; curBg = el;
+  gsap.to(["#bg-splitL", "#bg-splitR"], { opacity: 0, duration: D(0.8) });
   if (old) { drift.get(old)?.kill(); gsap.to(old, { scale: 1.35, opacity: 0, filter: "blur(14px)", duration: D(1.2), ease: "power3.in" }); }
-  gsap.fromTo("#flash", { opacity: 0 }, { opacity: 0.8, duration: D(0.55), ease: "power2.in", yoyo: true, repeat: 1 });
-  gsap.fromTo(el, { opacity: 0, scale: 1.25, filter: `blur(16px) brightness(${dim ? 0.7 : 1})` }, { opacity: 1, scale: 1.06, filter: `blur(${dim ? 6 : 0}px) brightness(${dim ? 0.7 : 1})`, duration: D(1.7), delay: D(0.45), ease: "expo.out", onComplete: () => kenBurns(el) });
+  gsap.fromTo("#flash", { opacity: 0 }, { opacity: 0.7, duration: D(0.55), ease: "power2.in", yoyo: true, repeat: 1 });
+  gsap.fromTo(el, { opacity: 0, scale: 1.25, filter: `blur(16px) brightness(${dim ? 0.62 : 1})` }, { opacity: 1, scale: 1.06, filter: `blur(${dim ? 6 : 0}px) brightness(${dim ? 0.62 : 1})`, duration: D(1.7), delay: D(0.45), ease: "expo.out", onComplete: () => kenBurns(el) });
 }
-// lateral camera move between places (Taust)
-function pan(name, back) {
-  const el = BG[name], old = curBg; if (el === old) return; curBg = el;
-  const d = back ? -1 : 1;
-  if (old) { drift.get(old)?.kill(); gsap.to(old, { xPercent: -14 * d, scale: 1.12, filter: "blur(10px)", opacity: 0, duration: D(1.4), ease: "power3.inOut" }); }
-  gsap.fromTo(el, { opacity: 1, xPercent: 14 * d, scale: 1.12, filter: "blur(10px)", clipPath: back ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" }, { xPercent: 0, scale: 1.06, filter: "blur(0px)", clipPath: "inset(0 0% 0 0%)", duration: D(1.5), ease: "expo.inOut", onComplete: () => kenBurns(el) });
-}
-// split screen for USA vs France
 function split() {
   const old = curBg; curBg = null; if (old) { drift.get(old)?.kill(); gsap.to(old, { scale: 1.3, opacity: 0, filter: "blur(14px)", duration: D(1.1), ease: "power3.in" }); }
   gsap.fromTo("#bg-splitL", { opacity: 1, clipPath: "polygon(0 0, 0% 0, 0% 100%, 0 100%)", scale: 1.15 }, { clipPath: "polygon(0 0, 54% 0, 46% 100%, 0 100%)", scale: 1.04, duration: D(1.6), delay: D(0.3), ease: "expo.inOut" });
   gsap.fromTo("#bg-splitR", { opacity: 1, clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)", scale: 1.15 }, { clipPath: "polygon(54.3% 0, 100% 0, 100% 100%, 46.3% 100%)", scale: 1.04, duration: D(1.6), delay: D(0.45), ease: "expo.inOut" });
 }
-/* ---------- title: buildings rise out of the ground with a rumble ---------- */
-let rumbleAmp = { v: 0 };
-gsap.ticker.add(() => { const a = rumbleAmp.v; if (a > 0.05) gsap.set("#world, #rise", { x: (Math.random() - 0.5) * a, y: (Math.random() - 0.5) * a * 0.7 }); });
-function riseIntro() {
-  const bs = $$("#rise .b img"), sh = $$("#rise .shadow"), lb = $$("#rise .lbl");
-  gsap.set(bs, { yPercent: 105 }); gsap.set(lb, { opacity: 0, y: 20 });
-  const tl = gsap.timeline({ delay: D(0.9) });
-  bs.forEach((img, i) => {
-    const at = i * 0.75;
-    tl.to(rumbleAmp, { v: 9, duration: 0.25, ease: "power2.out" }, at)
-      .to(img, { yPercent: 0, duration: D(2.4), ease: "power4.out" }, at)
-      .to(sh[i], { opacity: 1, duration: 1.6 }, at + 0.3)
-      .to(rumbleAmp, { v: 0, duration: 2.2, ease: "power2.out" }, at + 0.35)
-      .call(() => { const box = img.parentElement, x = parseFloat(box.style.left) + box.offsetWidth / 2, y = parseFloat(box.style.top) + box.offsetHeight; const [sx, sy] = toScreen(x, y); let n = 0; const iv = setInterval(() => { emit(sx, sy - 10 * S, 7, box.offsetWidth * S * 0.9); if (++n > 16) clearInterval(iv); }, 60); }, null, at);
-  });
-  tl.to(lb, { opacity: 1, y: 0, duration: D(1.0), stagger: 0.15, ease: "expo.out" }, 2.9);
-  tl.call(() => gsap.set("#world, #rise", { x: 0, y: 0 }));
+const PV = (p, dur, ease) => ({ px: p[0], py: p[1], pz: p[2], tx: p[3], ty: p[4], tz: p[5], fov: p[6], duration: D(dur), ease });
+const toPose = (p, dur, ease) => gsap.to(cam, { ...PV(p, dur, ease), overwrite: true });
+const jump = (p, keep) => { if (!keep) gsap.killTweensOf(cam); Object.assign(cam, { px: p[0], py: p[1], pz: p[2], tx: p[3], ty: p[4], tz: p[5], fov: p[6] }); };
+// exterior -> through the Capitol door -> gallery
+function enterGallery(i) {
+  const g = L[0]; const box = g ? new THREE.Box3().setFromObject(g) : null; const fz = box ? box.max.z : 6, cx = g ? (box.min.x + box.max.x) / 2 : -24;
+  const tl = gsap.timeline();
+  gsap.killTweensOf(cam);
+  tl.to(cam, PV([cx, 4, fz + 22, cx, 4, fz - 4, 34], 1.6, "power2.inOut"))
+    .to(cam, PV([cx, 2.6, fz + 1.5, cx, 2.6, fz - 10, 30], 1.3, "power3.in"))
+    .to("#black", { opacity: 1, duration: D(0.45), ease: "power2.in" }, "-=0.45")
+    .call(() => { jump([G.x, G.y + 6, G.z + 13, G.x, G.y + 6, WALL, 50], true); dim(0); })
+    .to("#black", { opacity: 0, duration: D(0.9), ease: "power2.out" })
+    .to(cam, PV(galPose(i), 2.4, "expo.out"), "<");
+  return tl;
 }
-/* ---------- text animations ---------- */
+// gallery -> dive into painting i -> its world (photo)
+function diveInto(i, name, dim2) {
+  const tl = gsap.timeline();
+  gsap.killTweensOf(cam);
+  tl.to(cam, PV(galPose(i, true), 1.8, "power3.in"))
+    .call(() => { const el = BG[name]; curBg = el; drift.get(el)?.kill(); gsap.set(el, { opacity: 0, scale: 1.0, filter: "blur(0px) brightness(1)" }); })
+    .to("#flash", { opacity: 0.9, duration: D(0.35), ease: "power2.in" }, "-=0.35")
+    .call(() => { const el = BG[name]; gsap.set(el, { opacity: 1 }); canvasOn(false, 0.01); })
+    .to("#flash", { opacity: 0, duration: D(0.9), ease: "power2.out" })
+    .fromTo(BG[name], { scale: 1.0 }, { scale: 1.06, filter: `blur(${dim2 ? 6 : 0}px) brightness(${dim2 ? 0.62 : 1})`, duration: D(2.2), ease: "expo.out", onComplete: () => kenBurns(BG[name]) }, "<");
+  return tl;
+}
+/* ---------- text + steps ---------- */
 const scenes = $$(".scene");
+const CAMS = [["title"], ["usa", "fr", "ee"], ["aerial"], ["usafr"], ["wide"], ["court"], ["golden"], ["orbit"], ["end"]];
+const DIM = { 2: 1, 4: 0.35, 7: 1 };
 $$(".split").forEach((el) => { const walk = (node) => [...node.childNodes].forEach((n) => { if (n.nodeType === 3) { const f = document.createDocumentFragment(); n.textContent.split(/(\s+)/).forEach((w) => { if (!w) return; if (/^\s+$/.test(w)) f.append(w); else { const o = document.createElement("span"); o.className = "w"; const i = document.createElement("span"); i.textContent = w; o.append(i); f.append(o); } }); n.replaceWith(f); } else walk(n); }); walk(el); });
 function showEl(el, delay = 0) {
   if (el.classList.contains("custom")) return; gsap.killTweensOf(el);
@@ -322,8 +418,8 @@ let cur = -1;
 const els = (s, f) => $$("[data-s]", s).filter(f);
 const hooks = {
   1(k, back) {
-    $$(".pane", scenes[1]).forEach((p, i) => { if (i === k) { gsap.set(p, { display: "block" }); gsap.fromTo(p.children, { opacity: 0, y: back ? -36 : 36, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: D(1.1), delay: D(0.55), stagger: 0.09, ease: "expo.out" }); } else if (getComputedStyle(p).display !== "none") gsap.to(p.children, { opacity: 0, y: back ? 36 : -36, filter: "blur(8px)", duration: D(0.45), stagger: 0.03, ease: "power3.in", onComplete: () => gsap.set(p, { display: "none" }) }); });
-    $$(".pol", scenes[1]).forEach((p, i) => { if (i === k) gsap.fromTo(p, { opacity: 0, y: 120, rotate: (i - 1) * 8 - 10, scale: 0.9 }, { opacity: 1, y: 0, rotate: [-4, 3, -2][i], scale: 1, duration: D(1.4), delay: D(0.8), ease: "expo.out", overwrite: true }); else gsap.to(p, { opacity: 0, y: -60, duration: D(0.5), ease: "power3.in", overwrite: true }); });
+    $$(".pane", scenes[1]).forEach((p, i) => { if (i === k) { gsap.set(p, { display: "block" }); gsap.fromTo(p.children, { opacity: 0, y: back ? -36 : 36, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: D(1.1), delay: D(0.9), stagger: 0.09, ease: "expo.out", overwrite: true }); } else if (getComputedStyle(p).display !== "none") gsap.to(p.children, { opacity: 0, y: back ? 36 : -36, filter: "blur(8px)", duration: D(0.45), stagger: 0.03, ease: "power3.in", overwrite: true, onComplete: () => gsap.set(p, { display: "none" }) }); });
+    $$(".pol", scenes[1]).forEach((p, i) => { if (i === k) gsap.fromTo(p, { opacity: 0, y: 120, rotate: (i - 1) * 8 - 10, scale: 0.9 }, { opacity: 1, y: 0, rotate: [-4, 3, -2][i], scale: 1, duration: D(1.4), delay: D(1.2), ease: "expo.out", overwrite: true }); else gsap.to(p, { opacity: 0, y: -60, duration: D(0.5), ease: "power3.in", overwrite: true }); });
   },
   4(k) {
     const cards = $$(".src", scenes[4]), pr = $("#principle");
@@ -341,23 +437,43 @@ const hooks = {
       gsap.to(nw, { opacity: on ? 1 : 0, y: on ? 0 : 28, filter: on ? "blur(0px)" : "blur(8px)", duration: D(1.0), delay: on ? 0.25 : 0, ease: "expo.out" }); });
   },
 };
+
+// where the camera / picture goes for each slide
+let galTL = null;
+function world(si, k, prev, back) {
+  const from = prev ? prev[0] : -1;
+  const PHOTO = { 2: ["ee", 1], 4: ["vote", 0.35], 5: ["court", 0] };
+  if (si === 0 || si >= 6) { // 3D outside
+    photosOff(1.2); canvasOn(true, 1.2);
+    if (from === 1 || from >= 2 && from <= 5) { jump([0, 140, 260, 0, 6, 0, 34]); }
+    const pose = si === 0 ? "title" : si === 6 ? "golden" : si === 7 ? "orbit" : "end";
+    if (prev) flyTo(pose, from >= 1 && from <= 5 ? 3.6 : 3.0, "expo.inOut");
+    if (si === 7) { gsap.delayedCall(3.0, () => { orbitOn = true; orbitA = Math.atan2(cam.px, cam.pz); }); }
+    dim(si === 7 ? 1 : 0);
+  } else if (si === 1) { // into the Capitol gallery
+    photosOff(0.6); canvasOn(true, 0.6); dim(0);
+    if (from === 0) galTL = enterGallery(k);
+    else { gsap.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: D(1.0) }); jump(galPose(k, true)); toPose(galPose(k), 2.2, "expo.out"); }
+  } else if (si === 2 && from === 1 && !back) { diveInto(2, "ee", 1); }
+  else if (si === 3) { canvasOn(false, 0.8); split(); }
+  else { canvasOn(false, 0.8); const [n, d] = PHOTO[si]; photo(n, d); }
+}
 function go(n) {
   if (n < 0 || n >= steps.length || n === cur) return;
   const back = n < cur, [si, k] = steps[n], prev = cur >= 0 ? steps[cur] : null; cur = n;
   const s = scenes[si];
   if (!prev || prev[0] !== si) {
-    if (prev) { const ps = scenes[prev[0]]; ps.classList.remove("on"); els(ps, (e) => +gsap.getProperty(e, "opacity") > 0).forEach((e, i) => hideEl(e, i * 0.025)); if (prev[0] === 1) gsap.to(".pol", { opacity: 0, y: -60, duration: D(0.5), ease: "power3.in" }); if (prev[0] === 0 || prev[0] === 8) gsap.to("#rise", { opacity: 0, scale: 1.25, filter: "blur(10px)", duration: D(1.0), ease: "power3.in" }); }
+    if (prev) { const ps = scenes[prev[0]]; ps.classList.remove("on"); els(ps, (e) => +gsap.getProperty(e, "opacity") > 0).forEach((e, i) => hideEl(e, i * 0.025)); if (prev[0] === 1) gsap.to(".pol", { opacity: 0, y: -60, duration: D(0.5), overwrite: true }); }
     s.classList.add("on");
     els(s, (e) => +e.dataset.s > k).forEach((e) => gsap.set(e, { opacity: 0 }));
-    els(s, (e) => +e.dataset.s <= k).forEach((e, i) => showEl(e, 0.8 + i * 0.08));
-    const bgs = s.dataset.bg.split(",");
-    if (bgs[0] === "split") split(); else if (si === 1 && prev && prev[0] === 1) pan(bgs[k], back); else dolly(bgs[Math.min(k, bgs.length - 1)], s.dataset.dim);
-    if (si === 0 || si === 8) { if (prev) gsap.fromTo("#rise", { opacity: 0, scale: 0.92, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: D(1.6), delay: D(0.5), ease: "expo.out" }); }
+    els(s, (e) => +e.dataset.s <= k).forEach((e, i) => showEl(e, 1.0 + i * 0.08));
+    orbitOn = false; world(si, k, prev, back);
+    gsap.to(lbls, { opacity: si === 0 || si === 8 ? 1 : 0, duration: D(0.8) });
   } else {
     if (!back) els(s, (e) => +e.dataset.s === k).forEach((e, i) => showEl(e, i * 0.08));
     else els(s, (e) => +e.dataset.s === k + 1).forEach((e) => hideEl(e));
-    if (si === 1) pan(s.dataset.bg.split(",")[k], back);
   }
+  if (si === 1 && prev && prev[0] === 1) { galTL && galTL.progress(1); toPose(galPose(k), 2.4, "power3.inOut"); }
   if (hooks[si]) hooks[si](k, back);
   $("#bar i").style.width = ((n + 1) / steps.length) * 100 + "%";
   $("#count").textContent = "SLAID " + (si + 1) + " / " + scenes.length;
@@ -384,7 +500,9 @@ $$(".quiz").forEach((q) => {
     if (i === ok) {
       $$(".opt", q).forEach((o) => o.classList.remove("bad")); b.classList.add("good"); fb.textContent = fb.dataset.good; fb.style.color = "var(--sage)";
       gsap.fromTo(b, { scale: 0.94 }, { scale: 1, duration: D(1), ease: "elastic.out(1,0.45)" });
-      const r = b.getBoundingClientRect(); emit(r.left + r.width / 2, r.top + r.height / 2, 26, r.width);
+      const r = b.getBoundingClientRect();
+      for (let j = 0; j < 24; j++) { const d = document.createElement("i"); d.style.cssText = `position:fixed;width:9px;height:9px;border-radius:50%;pointer-events:none;z-index:8;left:${r.left + r.width / 2}px;top:${r.top + r.height / 2}px;background:${["#9DBB88", "#E3B26B", "#D9785A", "#8FB0D9"][j % 4]}`; document.body.append(d);
+        const a = (j / 24) * Math.PI * 2, dist = 90 + Math.random() * 100; gsap.to(d, { x: Math.cos(a) * dist, y: Math.sin(a) * dist - 30, opacity: 0, scale: 0.4, duration: D(1.2), ease: "power3.out", onComplete: () => d.remove() }); }
     } else {
       b.classList.add("bad"); fb.textContent = "Vale – proovi uuesti!"; fb.style.color = "var(--wrong)";
       gsap.fromTo(b, { x: -14 }, { x: 0, duration: D(0.7), ease: "elastic.out(1.2,0.25)" });
@@ -392,16 +510,19 @@ $$(".quiz").forEach((q) => {
     }
   }));
 });
-/* ---------- boot after images load ---------- */
-const srcs = ["plain", "usa", "fr", "ee", "court", "vote"].map((n) => `img/${n}.jpg`).concat(["img/cap.webp", "img/bas.webp", "img/too.webp", "img/h_usa.jpg", "img/h_bastille.jpg", "img/h_ddhc.jpg"]);
-Promise.race([Promise.all(srcs.map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; }))), new Promise((r) => setTimeout(r, 6000))]).then(() => {
-  $$("[data-s]").forEach((e) => gsap.set(e, { opacity: 0 }));
-  gsap.set($$(".pane", scenes[1]), { display: "none" }); gsap.set($$(".pol"), { opacity: 0 }); gsap.set("#principle", { opacity: 0 });
-  gsap.to("#load", { opacity: 0, duration: 0.8, onComplete: () => $("#load").remove() });
-  dustLoop(); riseIntro(); go(0);
-  gsap.to("#hint", { opacity: 1, duration: 1, delay: 3.5 }); gsap.to("#hint", { opacity: 0, duration: 1, delay: 10 });
-});
+/* ---------- boot: load the 3D models, then start ---------- */
+$$("[data-s]").forEach((e) => gsap.set(e, { opacity: 0 }));
+gsap.set($$(".pane", scenes[1]), { display: "none" }); gsap.set($$(".pol"), { opacity: 0 }); gsap.set("#principle", { opacity: 0 }); gsap.set(lbls, { opacity: 0, y: 20 });
+requestAnimationFrame(frame);
+const mgr = new THREE.LoadingManager(), loader = new THREE.GLTFLoader(mgr), prog = $("#load b");
+mgr.onProgress = (u, a, b) => { if (prog) prog.textContent = Math.round((a / b) * 100) + "%"; };
+let started = false;
+function start() { if (started) return; started = true; gsap.to("#load", { opacity: 0, duration: 0.8, onComplete: () => $("#load").remove() }); cam.px = 0; cam.py = 45; cam.pz = 170; flyTo("title", 4.2, "power3.out"); riseIntro(); go(0); gsap.to("#hint", { opacity: 1, duration: 1, delay: 4.5 }); gsap.to("#hint", { opacity: 0, duration: 1, delay: 11 }); }
+let loaded = 0;
+SPOTS.forEach((s, i) => loader.load(s.file, (g) => { L[i] = placeModel(g, s); if (++loaded === SPOTS.length) start(); }, undefined, () => { if (++loaded === SPOTS.length) start(); }));
+setTimeout(start, 20000);
 })();
+
 </script>
 </body>
 </html>
