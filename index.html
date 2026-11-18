@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kust tuleb võim?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..800,50;1,9..144,400..700,50&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: cinematic film-still world — full-bleed photo scenes with a slow camera drift, dark-glass text panels on the left, the camera "dollies" into the next scene. Single warm dusk look. */
+:root{
+  --night:#120E0B; --glass:rgba(22,16,12,.58); --glass-line:rgba(255,236,214,.14);
+  --cream:#F6EEE3; --cream-2:#D9CBB8; --muted:#A8998A;
+  --gold:#E3B26B; --terra:#D9785A; --blue:#8FB0D9; --sage:#9DBB88; --wrong:#E07A62;
+  --display:"Fraunces", Georgia, "Times New Roman", serif; --body:"Manrope", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--night);color:var(--cream);font-family:var(--body)}
+body{padding-left:max(0px, env(safe-area-inset-left,0px));padding-right:max(0px, env(safe-area-inset-right,0px))}
+#world{position:fixed;inset:-24px;will-change:transform}
+.bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;will-change:transform,opacity,filter,clip-path}
+#shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(14,10,8,.82) 0%, rgba(14,10,8,.55) 34%, rgba(14,10,8,.08) 62%, rgba(14,10,8,0) 100%),linear-gradient(0deg, rgba(14,10,8,.55) 0%, rgba(14,10,8,0) 32%);transition:opacity 1.2s}
+#grain{position:fixed;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:overlay}
+#vig{position:fixed;inset:0;pointer-events:none;background:radial-gradient(130% 110% at 55% 45%, transparent 55%, rgba(0,0,0,.55) 100%)}
+#flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:radial-gradient(80% 80% at 60% 40%, rgba(255,214,160,.55), rgba(255,180,120,0) 70%);mix-blend-mode:screen}
+#dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#viewport{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none}
+#root{position:relative;width:1600px;height:900px;transform-origin:center;flex:none}
+.scene{position:absolute;inset:0;pointer-events:none}
+.scene.on{pointer-events:auto}
+[data-s]{opacity:0}
+.kick{font:800 14px/1 var(--body);letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
+h1,h2{font-family:var(--display);font-variation-settings:"SOFT" 50;margin:0;color:var(--cream);text-wrap:balance;text-shadow:0 2px 30px rgba(0,0,0,.35)}
+h1{font-size:116px;line-height:.9;font-weight:600;letter-spacing:-.025em}
+h2{font-size:70px;line-height:1;font-weight:560;letter-spacing:-.02em}
+h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
+.glass{position:absolute;background:var(--glass);backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);border:1px solid var(--glass-line);border-radius:22px;padding:30px 34px;box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+.glass p{margin:0;font-size:21px;line-height:1.5;color:var(--cream)}
+.lead{font-size:24px;line-height:1.45;color:var(--cream-2);margin:0}
+.tag{display:inline-block;font:800 13px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--c,var(--gold));margin-bottom:14px}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.w>span{display:inline-block;will-change:transform}
+.year{font:500 120px/.85 var(--display);letter-spacing:-.04em;color:var(--c)}
+.tl{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:14px}
+.tl li{display:grid;grid-template-columns:70px 1fr;gap:14px;font-size:20px;line-height:1.45}
+.tl b{font:600 italic 22px/1.3 var(--display);color:var(--c)}
+.pane{position:absolute;inset:30px 34px}
+.polaroid{position:absolute;background:#F4EDE2;padding:10px 10px 34px;box-shadow:0 30px 60px -18px rgba(0,0,0,.7);transform:rotate(-4deg)}
+.polaroid img{display:block;width:100%;height:100%;object-fit:cover}
+.polaroid span{position:absolute;left:12px;right:12px;bottom:9px;font:600 italic 14px/1 var(--display);color:#4A3F35}
+.rise{position:absolute;inset:0}
+.b{position:absolute;overflow:hidden}
+.b img{position:absolute;left:0;bottom:0;width:100%;display:block;filter:drop-shadow(0 30px 25px rgba(0,0,0,.45))}
+.shadow{position:absolute;height:44px;border-radius:50%;background:radial-gradient(closest-side, rgba(0,0,0,.55), rgba(0,0,0,0));opacity:0}
+.lbl{position:absolute;transform:translateX(-50%);font:800 13px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--cream);white-space:nowrap}
+.lbl b{font:500 italic 30px/1 var(--display);letter-spacing:0;color:var(--gold);display:block;margin-bottom:6px;text-align:center}
+.tbl{position:absolute;left:96px;top:250px;width:1408px;display:grid;grid-template-columns:260px repeat(3,1fr);gap:0;border-radius:20px;overflow:hidden;border:1px solid var(--glass-line);background:rgba(22,16,12,.66);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.tbl>div{padding:16px 18px;font-size:18px;line-height:1.42;border-top:1px solid rgba(255,236,214,.09);border-left:1px solid rgba(255,236,214,.09)}
+.tbl .h{font:800 14px/1.2 var(--body);letter-spacing:.16em;text-transform:uppercase;border-top:0;color:var(--c)}
+.tbl .r{font-weight:700;color:var(--gold)}
+.split{display:block}
+.node{width:300px}
+.node .num{font:500 italic 60px/1 var(--display);color:var(--c)}
+.node h3{font:800 22px/1.25 var(--body);margin:10px 0 8px;color:var(--cream)}
+.node p{font-size:18px !important;color:var(--cream-2) !important}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.opt{all:unset;cursor:pointer;position:relative;background:rgba(246,238,227,.08);border:1px solid var(--glass-line);border-radius:16px;padding:20px 22px;font:700 20px/1.3 var(--body);color:var(--cream);display:flex;gap:14px;align-items:center;transition:transform .35s cubic-bezier(.2,.8,.2,1),background .35s,border-color .35s}
+.opt:hover{transform:translateY(-4px);background:rgba(246,238,227,.14)}
+.opt:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.opt .L{font:500 italic 30px/1 var(--display);color:var(--gold)}
+.opt.good{background:rgba(157,187,136,.35);border-color:var(--sage)}
+.opt.bad{background:rgba(224,122,98,.32);border-color:var(--wrong)}
+.fb{font:700 19px/1.4 var(--body);margin-top:14px;min-height:27px}
+#bar{position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.08);z-index:5}
+#bar i{display:block;height:100%;width:0;background:var(--gold);transition:width 1s cubic-bezier(.65,0,.35,1)}
+#ctl{position:fixed;right:max(18px, env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;z-index:6}
+#ctl button{all:unset;cursor:pointer;width:42px;height:42px;border-radius:50%;background:rgba(22,16,12,.6);border:1px solid var(--glass-line);backdrop-filter:blur(8px);display:grid;place-items:center;color:var(--cream);font:700 17px/1 var(--body);transition:transform .2s}
+#ctl button:hover{transform:scale(1.08)}
+#ctl button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+#count{position:fixed;left:max(18px, env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));font:700 12px/1 var(--body);letter-spacing:.2em;color:var(--muted);z-index:6}
+#notes{position:fixed;left:50%;bottom:calc(74px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(860px,calc(100% - 32px));background:rgba(10,8,6,.92);color:var(--cream);border:1px solid var(--glass-line);border-radius:16px;padding:16px 20px;font:500 16px/1.5 var(--body);z-index:6}
+#load{position:fixed;inset:0;display:grid;place-items:center;background:var(--night);z-index:9;font:700 13px/1 var(--body);letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
+#hint{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);font:700 11px/1 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--cream-2);background:rgba(22,16,12,.55);border:1px solid var(--glass-line);padding:9px 14px;border-radius:999px;z-index:6;opacity:0}
+</style>
+</head>
+<body>
+
+<div id="world">
+  <div class="bg" id="bg-plain" style="background-image:url(img/plain.jpg)"></div>
+  <div class="bg" id="bg-usa" style="background-image:url(img/usa.jpg)"></div>
+  <div class="bg" id="bg-fr" style="background-image:url(img/fr.jpg)"></div>
+  <div class="bg" id="bg-ee" style="background-image:url(img/ee.jpg)"></div>
+  <div class="bg" id="bg-court" style="background-image:url(img/court.jpg)"></div>
+  <div class="bg" id="bg-vote" style="background-image:url(img/vote.jpg)"></div>
+  <div class="bg" id="bg-splitL" style="background-image:url(img/usa.jpg);background-position:60% center"></div>
+  <div class="bg" id="bg-splitR" style="background-image:url(img/fr.jpg);background-position:75% center"></div>
+</div>
+<div id="shade"></div>
+<canvas id="dust" aria-hidden="true"></canvas>
+<canvas id="grain" aria-hidden="true"></canvas>
+<div id="vig"></div>
+<div id="flash"></div>
+
+<div id="viewport"><div id="root">
+  <div class="rise" id="rise">
+    <div class="shadow" style="left:70px;width:560px;top:770px"></div><div class="shadow" style="left:560px;width:500px;top:752px"></div><div class="shadow" style="left:1060px;width:500px;top:768px"></div>
+    <div class="b" style="left:60px;top:300px;width:560px;height:492px"><img src="img/cap.webp" alt="USA Kapitoolium"></div>
+    <div class="b" style="left:560px;top:250px;width:500px;height:524px"><img src="img/bas.webp" alt="Bastille"></div>
+    <div class="b" style="left:1080px;top:200px;width:470px;height:590px"><img src="img/too.webp" alt="Toompea loss ja Pikk Hermann"></div>
+    <div class="lbl" style="left:340px;top:812px"><b>1776</b>USA</div><div class="lbl" style="left:810px;top:812px"><b>1789</b>Prantsusmaa</div><div class="lbl" style="left:1305px;top:812px"><b>1992</b>Eesti</div>
+  </div>
+
+<!-- 0 TITLE: the three landmarks rise out of the ground -->
+<section class="scene" data-bg="plain" data-steps="1" data-notes="Tere! Meie teema: kust tuleb riigis võim. Võrdleme USA iseseisvusdeklaratsiooni (1776), Prantsusmaa inimõiguste deklaratsiooni (1789) ja tänapäeva Eesti põhiseadust (1992).">
+
+  <div data-s="0" class="kick" style="position:absolute;left:96px;top:70px">Ajalugu · rühmatöö</div>
+  <h1 data-s="0" class="split" style="position:absolute;left:90px;top:100px;width:1300px">Kust tuleb <em>võim?</em></h1>
+  <p data-s="0" class="lead" style="position:absolute;left:96px;top:240px;width:700px">Mis ühendab 18. sajandi deklaratsioone tänapäeva demokraatiaga ja mis on muutunud?</p>
+  <div data-s="0" style="position:absolute;right:96px;top:70px;font:800 13px/1 var(--body);letter-spacing:.2em;color:var(--cream-2)">ESITAJAD: ________________</div>
+</section>
+
+<!-- 1 TAUST: camera travels USA → France → Estonia -->
+<section class="scene" data-bg="usa,fr,ee" data-steps="3" data-notes="USA: Briti parlament pani kolooniatele makse, aga kolonistidel polnud seal esindajaid; 1776 iseseisvus, 1787 põhiseadus jagas võimu, 1791 vabadused. PRANTSUSMAA: riigivõlg, kolmas seisus kandis maksukoormust; 1789 Rahvuskogu ja deklaratsioon, 1791 kuninga võim piiratud, 1792 vabariik ja terror. EESTI: kõrgeim võim on rahval, valivad kodanikud alates 18, võim on jagatud, kohus sõltumatu.">
+  <div data-s="0" class="glass" style="left:96px;top:130px;width:640px;height:520px">
+    <div class="pane" style="--c:#E7A58C"><span class="tag">Taust · USA · allikas A</span><div class="year">1776</div>
+      <ul class="tl"><li><b>1776</b><span>Iseseisvusdeklaratsioon. Kolonistidel polnud Briti parlamendis esindajaid</span></li><li><b>1783</b><span>Suurbritannia tunnustab iseseisvust</span></li><li><b>1787</b><span>Põhiseadus: Kongress, president ja kohtud</span></li><li><b>1791</b><span>Sõna-, usu- ja kogunemisvabadus</span></li></ul></div>
+    <div class="pane" style="--c:var(--blue)"><span class="tag">Taust · Prantsusmaa · allikas B</span><div class="year">1789</div>
+      <ul class="tl"><li><b>1789</b><span>Kolmas seisus kuulutab end Rahvuskoguks; „Inimese ja kodaniku õiguste deklaratsioon“</span></li><li><b>1791</b><span>Põhiseadus piirab kuninga võimu</span></li><li><b>1792</b><span>Vabariik, seejärel jakobiinide terror</span></li></ul></div>
+    <div class="pane" style="--c:#9CC3EA"><span class="tag">Taust · Eesti · allikas C</span><div class="year">1992</div>
+      <ul class="tl"><li><b>§ 1</b><span>Kõrgeima riigivõimu kandja on rahvas</span></li><li><b>§ 57</b><span>Riigikogu valivad kodanikud alates 18, salaja (§ 60)</span></li><li><b>§ 4</b><span>Võimud tasakaalustavad üksteist; kohus sõltumatu (§ 146)</span></li><li><b>§ 45</b><span>Sõnavabadus; võrdsus (§ 12); õigus kohtusse (§ 15)</span></li></ul></div>
+  </div>
+  <div class="polaroid pol" style="left:600px;top:540px;width:260px;height:190px"><img src="img/h_usa.jpg" alt=""><span>J. Trumbull, 1819</span></div>
+  <div class="polaroid pol" style="left:600px;top:540px;width:260px;height:190px;transform:rotate(3deg)"><img src="img/h_bastille.jpg" alt=""><span>Bastille' vallutamine, 1789</span></div>
+  <div class="polaroid pol" style="left:600px;top:540px;width:200px;height:250px;transform:rotate(-2deg)"><img src="img/h_ddhc.jpg" alt=""><span>Õiguste deklaratsioon</span></div>
+</section>
+
+<!-- 2 ÜL 1 -->
+<section class="scene" data-bg="vote" data-dim="1" data-steps="5" data-notes="Ülesanne 1. Iga klõps toob ühe rea. Kõigis kolmes on võim rahvalt. Suurim erinevus: kes sai valida – USA-s ja Prantsusmaal ainult osa mehi, Eestis kõik kodanikud alates 18. Võim on kõigis jagatud, Eestis on kohus selgelt sõltumatu.">
+  <div data-s="0" class="kick" style="position:absolute;left:96px;top:90px">Ülesanne 1</div>
+  <h2 data-s="0" class="split" style="position:absolute;left:92px;top:122px">Võrdlustabel</h2>
+  <div class="tbl" data-s="0">
+    <div class="h" data-s="0" style="--c:var(--muted)">Mida võrdleme?</div><div class="h" data-s="0" style="--c:#E7A58C">USA · 18. saj lõpp</div><div class="h" data-s="0" style="--c:var(--blue)">Prantsusmaa · 1791</div><div class="h" data-s="0" style="--c:#9CC3EA">Eesti · täna</div>
+    <div class="r" data-s="1">Kellelt pärineb õigus valitseda?</div><div data-s="1">Inimeste nõusolekust (allikas A)</div><div data-s="1">Rahvalt: „võimu allikas on rahvas“ (allikas B)</div><div data-s="1">Rahvalt: rahvas on kõrgeima võimu kandja (§ 1)</div>
+    <div class="r" data-s="2">Kes saab valida, mis tingimustel?</div><div data-s="2">Sõltus osariigist; enamasti varakad valged mehed. Naised ja orjad ei saanud</div><div data-s="2">Mehed, kes täitsid vanuse- ja maksunõude. Naised ei saanud</div><div data-s="2">Kõik Eesti kodanikud alates 18. eluaastast, salajane hääletus (§ 57, 60)</div>
+    <div class="r" data-s="3">Kuidas on võim jagatud või piiratud?</div><div data-s="3">Kongress – seadused, president – täidesaatev võim, kohtud – kohtuvõim (1787)</div><div data-s="3">Kuninga võim piiratud; seadused võtab vastu valitud kogu</div><div data-s="3">Riigikogu, president, valitsus ja kohtud tasakaalustavad (§ 4); kohus sõltumatu (§ 146)</div>
+    <div class="r" data-s="4">Milliseid õigusi kaitstakse?</div><div data-s="4">Elu ja vabadus; sõna-, usu- ja kogunemisvabadus (1791)</div><div data-s="4">Vabadus ja võrdsus; seadus kõigile ühtemoodi</div><div data-s="4">Võrdsus seaduse ees (§ 12), sõnavabadus (§ 45), õigus kohtusse (§ 15)</div>
+  </div>
+</section>
+
+<!-- 3 ÜL 2: split screen USA | France -->
+<section class="scene" data-bg="split" data-steps="4" data-notes="Ülesanne 2. Kolonistid tahtsid ise otsustada oma maksude üle, sest Briti parlamendis polnud neil esindajaid. Prantsuse kolmas seisus kandis suurimat maksukoormust ja nõudis õigust rääkida kogu rahva nimel. Sarnasus: kes maksab, peab saama otsustada. Erinevus: ameeriklased lahkusid Suurbritannia alt, prantslased muutsid oma riiki seestpoolt.">
+  <div data-s="0" class="kick" style="position:absolute;left:96px;top:80px">Ülesanne 2</div>
+  <h2 data-s="0" class="split" style="position:absolute;left:92px;top:112px;width:1420px">Kuidas maksutülist sai <em>vaidlus võimu üle?</em></h2>
+  <div data-s="0" data-from="left" class="glass" style="left:96px;top:250px;width:660px"><span class="tag" style="--c:#E7A58C">Ameerika kolonistid</span><p>Tahtsid ise otsustada, milliseid makse maksta – Briti parlamendis polnud neil ühtegi esindajat.</p><p style="margin-top:12px;color:#E7A58C;font-weight:700">Uued maksud → iseseisvussõda → 1776</p></div>
+  <div data-s="0" data-from="right" class="glass" style="left:844px;top:250px;width:660px"><span class="tag" style="--c:var(--blue)">Kolmanda seisuse saadikud</span><p>Nõudsid õigust rääkida kogu rahva nimel – nemad kandsid maksukoormust, aadel ja vaimulikud mitte.</p><p style="margin-top:12px;color:var(--blue);font-weight:700">1789 kuulutasid end Rahvuskoguks</p></div>
+  <div data-s="1" class="glass" style="left:96px;top:520px;width:660px;border-color:rgba(231,165,140,.5)"><p><b style="font:500 italic 30px/1 var(--display);color:#E7A58C">Sarnasus.</b> Mõlemal juhul: kes maksab, peab saama ka otsustada. Maksuküsimus muutus küsimuseks, kellel on võim.</p></div>
+  <div data-s="2" class="glass" style="left:844px;top:520px;width:660px;border-color:rgba(143,176,217,.5)"><p><b style="font:500 italic 30px/1 var(--display);color:var(--blue)">Erinevus.</b> Ameeriklased lõid uue riigi ja lahkusid Briti alt. Prantslased muutsid oma riiki seestpoolt ja piirasid kuninga võimu.</p></div>
+  <div data-s="3" class="glass" style="left:96px;top:740px;width:1408px;padding:20px 30px"><p><span class="kick" style="margin-right:16px">Küsimus klassile</span>Kas maksaksite makse, kui ei saaks üldse otsustada, milleks neid kasutatakse?</p></div>
+</section>
+
+<!-- 4 ÜL 3 -->
+<section class="scene" data-bg="ee" data-dim="1" data-steps="5" data-notes="Ülesanne 3. Klõps 1: kolm allikat sulanduvad üheks põhimõtteks – võim pärineb rahvalt. Klõps 2: kuidas see Eestis valimistel toimib. Klõpsud 3–4: ajalooline näide – paberil võrdsus, päriselt said hääletada ainult osa mehi.">
+  <div data-s="0" class="kick" style="position:absolute;left:96px;top:80px">Ülesanne 3</div>
+  <h2 data-s="0" class="split" style="position:absolute;left:92px;top:112px">Mis on kõigis kolmes <em>sama?</em></h2>
+  <div class="abc" data-s="0" style="position:absolute;left:96px;top:250px;width:1408px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+    <div class="glass src" style="position:relative"><span class="tag" style="--c:#E7A58C">A · USA 1776</span><p style="font:500 italic 30px/1.25 var(--display)">„Valitsuse võim põhineb inimeste nõusolekul“</p></div>
+    <div class="glass src" style="position:relative"><span class="tag" style="--c:var(--blue)">B · Prantsusmaa 1789</span><p style="font:500 italic 30px/1.25 var(--display)">„Võimu allikas on rahvas“</p></div>
+    <div class="glass src" style="position:relative"><span class="tag" style="--c:#9CC3EA">C · Eesti § 1</span><p style="font:500 italic 30px/1.25 var(--display)">„Kõrgeima riigivõimu kandja on rahvas“</p></div>
+  </div>
+  <div id="principle" class="custom" data-s="1" style="position:absolute;left:0;right:0;top:300px;text-align:center"><div style="font:500 italic 118px/1 var(--display);color:var(--gold);letter-spacing:-.02em;text-shadow:0 4px 50px rgba(0,0,0,.5)">Võim pärineb rahvalt</div></div>
+  <div data-s="2" class="glass" style="left:96px;top:470px;width:660px"><span class="tag" style="--c:#9CC3EA">Kuidas see Eestis toimib</span><p>Kodanikud alates 18 valivad Riigikogu. Igal ühel on üks hääl ja hääletus on salajane. Kui rahvas pole rahul, valib ta järgmine kord teisiti.</p></div>
+  <div data-s="3" class="glass" style="left:844px;top:470px;width:660px"><span class="tag" style="--c:var(--muted)">Paberil · 1789</span><p style="font:500 italic 30px/1.3 var(--display)">„Inimesed sünnivad vabadena ja <span id="strike" style="position:relative;white-space:nowrap">võrdsete õigustega<i style="position:absolute;left:-4px;right:-4px;top:55%;height:4px;border-radius:3px;background:var(--terra);transform:scaleX(0);transform-origin:left"></i></span>.“</p></div>
+  <div data-s="4" class="glass" style="left:844px;top:690px;width:660px;border-color:rgba(217,120,90,.55)"><span class="tag" style="--c:var(--terra)">Päriselt</span><p>1791 said hääletada ainult mehed, kes täitsid vanuse- ja maksunõude. Naistel valimisõigust polnud. USA-s jäi alles orjus.</p></div>
+</section>
+
+<!-- 5 ÜL 4 -->
+<section class="scene" data-bg="court" data-steps="5" data-notes="Ülesanne 4. Ajalehe keelamine puudutaks sõnavabadust (§ 45). Ajaleht saaks pöörduda kohtusse (§ 15), lõpuks Riigikohtusse. Kohtu sõltumatus (§ 146) on tähtis, sest kohus otsustab seaduse järgi, mitte Riigikogu enamuse soovi järgi. Küsige klassilt: mis juhtuks, kui kohtunikke saaks vallandada valitsus?">
+  <div data-s="0" class="kick" style="position:absolute;left:96px;top:80px">Ülesanne 4 · olukord</div>
+  <h2 data-s="0" class="split" style="position:absolute;left:92px;top:112px;width:1420px">Riigikogu tahab <em>keelata ajalehe</em></h2>
+  <svg data-s="0" style="position:absolute;left:96px;top:262px;overflow:visible" width="1408" height="20" aria-hidden="true"><path id="flowline" d="M10 10 H1398" stroke="#E3B26B" stroke-width="3" stroke-linecap="round" fill="none" stroke-dasharray="1400" stroke-dashoffset="1400"/></svg>
+  <div class="glass node" data-s="0" style="left:96px;top:300px;--c:var(--cream-2)"><div class="num">01</div><h3>Keeld</h3><p>Enamus tahab keelata valitsust kritiseeriva ajalehe</p></div>
+  <div class="glass node" data-s="1" style="left:465px;top:300px;--c:#E7A58C"><div class="num">02</div><h3>Rikub õigust</h3><p>Sõnavabadus: igaühel on õigus arvamust väljendada (§ 45)</p></div>
+  <div class="glass node" data-s="2" style="left:834px;top:300px;--c:var(--blue)"><div class="num">03</div><h3>Kohtusse</h3><p>Kui õigusi rikutakse, saab pöörduda kohtusse (§ 15)</p></div>
+  <div class="glass node" data-s="3" style="left:1204px;top:300px;--c:var(--gold)"><div class="num">04</div><h3>Sõltumatu kohus</h3><p>Otsustab seaduse järgi, mitte enamuse soovi järgi (§ 146)</p></div>
+  <div data-s="4" class="glass" style="left:96px;top:650px;width:1408px"><p><b style="font:500 italic 30px/1 var(--display);color:var(--gold)">Miks on kohtu sõltumatus tähtis?</b> Kui kohus kuulaks Riigikogu enamust, poleks ajalehel kuskilt kaitset – enamus võiks vaigistada kõik kriitikud. Võimude lahusus (§ 4) tähendab, et Riigikogu ei saa üksi kõike otsustada.</p></div>
+</section>
+
+<!-- 6 ÜL 5 -->
+<section class="scene" data-bg="vote" data-steps="6" data-notes="Ülesanne 5. Ühendav põhimõte: võim pärineb rahvalt (A, B, C). Igas kaardis kõigepealt „siis“, järgmine klõps muudab selle „nüüd“-iks. Erinevus 1: kes saab hääletada. Erinevus 2: kuidas õigusi kaitsta. Vastus: põhiidee on sama, aga täna kehtib see kõigile ja on kohtus kaitstud.">
+  <div data-s="0" class="kick" style="position:absolute;left:96px;top:80px">Ülesanne 5</div>
+  <h2 data-s="0" class="split" style="position:absolute;left:92px;top:112px">Järeldus</h2>
+  <div data-s="0" class="glass" style="left:96px;top:225px;width:1408px;padding:22px 34px;border-color:rgba(227,178,107,.5)"><p style="font-size:25px"><b style="font:500 italic 34px/1 var(--display);color:var(--gold)">Ühendab:</b> võim pärineb rahvalt ja inimestel on õigused (allikad A, B, C)</p></div>
+  <div data-s="1" class="glass flip" data-flip="3" style="left:96px;top:360px;width:680px;height:290px"><h3 style="font:800 22px/1.2 var(--body);margin:0 0 18px">1 · Kes saab võimu mõjutada</h3>
+    <div style="position:relative"><div class="then"><span class="tag" style="--c:var(--muted)">Siis</span><p style="color:var(--cream-2)">USA-s enamasti varakad valged mehed; Prantsusmaal ainult mehed, kes täitsid maksunõude.</p></div>
+    <div class="now" style="position:absolute;inset:0;opacity:0"><span class="tag" style="--c:var(--sage)">Nüüd</span><p><b>Eestis iga kodanik alates 18 (§ 57)</b> – soost ja varast sõltumata; lisaks rahvahääletus (§ 56).</p></div></div></div>
+  <div data-s="2" class="glass flip" data-flip="4" style="left:824px;top:360px;width:680px;height:290px"><h3 style="font:800 22px/1.2 var(--body);margin:0 0 18px">2 · Kuidas õigusi kaitsta</h3>
+    <div style="position:relative"><div class="then"><span class="tag" style="--c:var(--muted)">Siis</span><p style="color:var(--cream-2)">Õigused kuulutati välja, aga neid ei kaitstud: Prantsusmaal terror, USA-s orjus.</p></div>
+    <div class="now" style="position:absolute;inset:0;opacity:0"><span class="tag" style="--c:var(--sage)">Nüüd</span><p><b>Eestis saab minna kohtusse (§ 15)</b> ja kohus on sõltumatu (§ 146).</p></div></div></div>
+  <div data-s="5" class="glass" style="left:96px;top:690px;width:1408px"><p style="font-size:24px"><span class="kick" style="margin-right:16px">Vastus põhiküsimusele</span>Idee on sama, aga täna kehtib see kõigile ja õigusi saab kohtus kaitsta.</p></div>
+</section>
+
+<!-- 7 QUIZ -->
+<section class="scene" data-bg="plain" data-dim="1" data-steps="1" data-notes="Laske klassil vastata ja klõpsake vastusel. Õiged vastused: 1 – B, 2 – A.">
+  <div data-s="0" class="kick" style="position:absolute;left:96px;top:80px">Klassile</div>
+  <h2 data-s="0" class="split" style="position:absolute;left:92px;top:112px">Viktoriin</h2>
+  <div data-s="0" class="glass" style="left:96px;top:225px;width:1408px">
+    <div class="quiz" data-ok="1"><p style="font:500 30px/1.2 var(--display)">1 · Kes said Prantsusmaal 1791. aastal hääletada?</p>
+      <div class="opts"><button class="opt"><span class="L">A</span>Kõik inimesed</button><button class="opt"><span class="L">B</span>Mehed, kes täitsid vanuse- ja maksunõude</button><button class="opt"><span class="L">C</span>Ainult kuningas ja aadel</button></div>
+      <div class="fb" data-good="Õige! Naised ja vaesemad mehed jäid ilma." aria-live="polite"></div></div>
+    <div class="quiz" data-ok="0" style="margin-top:24px"><p style="font:500 30px/1.2 var(--display)">2 · Riigikogu tahab keelata ajalehe. Kuhu saab ajaleht pöörduda?</p>
+      <div class="opts"><button class="opt"><span class="L">A</span>Kohtusse (§ 15)</button><button class="opt"><span class="L">B</span>Presidendi juurde</button><button class="opt"><span class="L">C</span>Kuhugi – enamus otsustab</button></div>
+      <div class="fb" data-good="Õige! Kohus on sõltumatu (§ 146) ja kaitseb sõnavabadust (§ 45)." aria-live="polite"></div></div>
+  </div>
+</section>
+
+<!-- 8 END -->
+<section class="scene" data-bg="plain" data-steps="1" data-notes="Aitäh! Küsige, kas klassil on küsimusi.">
+  <h1 data-s="0" class="split" style="position:absolute;left:0;right:0;top:220px;text-align:center">Aitäh! <em>Küsimused?</em></h1>
+  <p data-s="0" class="lead" style="position:absolute;left:0;right:0;top:380px;text-align:center">Kas mõni õigus, mida täna peame loomulikuks, puudub veel kellelgi?</p>
+  <p data-s="0" style="position:absolute;left:0;right:0;bottom:56px;text-align:center;margin:0;font-size:14px;color:var(--muted)">Allikad: tunni lugemistekst (allikad A–C). Pildid: J. Trumbull 1819, „Prise de la Bastille“, J.-J.-F. Le Barbier (avalik omand); stseenid loodud tehisaruga.</p>
+</section>
+
+</div></div>
+
+<div id="hint">Edasi: klõps, tühik või → · N = märkmed · F = täisekraan</div>
+<div id="count"></div>
+<div id="bar"><i></i></div>
+<div id="notes" hidden></div>
+<div id="ctl"><button id="bPrev" aria-label="Eelmine">‹</button><button id="bNext" aria-label="Järgmine">›</button><button id="bNotes" aria-label="Märkmed">N</button><button id="bFull" aria-label="Täisekraan">⤢</button></div>
+<div id="load">Laen…</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const D = (d) => (RM ? 0.01 : d);
+const $ = (q, r = document) => r.querySelector(q), $$ = (q, r = document) => [...r.querySelectorAll(q)];
+/* ---------- film grain (static noise, drifts) ---------- */
+const g = $("#grain"), gx = g.getContext("2d"); g.width = 256; g.height = 256;
+const gi = gx.createImageData(256, 256); for (let i = 0; i < gi.data.length; i += 4) { const v = Math.random() * 255; gi.data[i] = gi.data[i + 1] = gi.data[i + 2] = v; gi.data[i + 3] = 255; } gx.putImageData(gi, 0, 0);
+g.style.width = "100%"; g.style.height = "100%"; g.style.imageRendering = "pixelated";
+/* ---------- dust particles ---------- */
+const dc = $("#dust"), dx = dc.getContext("2d"); let parts = [];
+function sizeDust() { dc.width = innerWidth * devicePixelRatio; dc.height = innerHeight * devicePixelRatio; }
+function emit(x, y, n, spread) { for (let i = 0; i < n; i++) parts.push({ x: x + (Math.random() - 0.5) * spread, y: y + Math.random() * 10, vx: (Math.random() - 0.5) * 2.2, vy: -Math.random() * 2.4 - 0.4, r: 6 + Math.random() * 26, a: 0.35 + Math.random() * 0.35, life: 1, rock: Math.random() < 0.18 }); }
+function dustLoop() {
+  dx.clearRect(0, 0, dc.width, dc.height);
+  parts = parts.filter((p) => p.life > 0);
+  for (const p of parts) {
+    p.x += p.vx; p.y += p.vy; p.vy += p.rock ? 0.18 : -0.006; p.vx *= 0.99; p.life -= p.rock ? 0.02 : 0.009; p.r *= p.rock ? 1 : 1.012;
+    const s = devicePixelRatio;
+    if (p.rock) { dx.fillStyle = `rgba(70,52,36,${p.life})`; dx.fillRect(p.x * s, p.y * s, 3 * s, 3 * s); }
+    else { const gr = dx.createRadialGradient(p.x * s, p.y * s, 0, p.x * s, p.y * s, p.r * s); gr.addColorStop(0, `rgba(214,178,132,${p.a * p.life})`); gr.addColorStop(1, "rgba(214,178,132,0)"); dx.fillStyle = gr; dx.beginPath(); dx.arc(p.x * s, p.y * s, p.r * s, 0, 7); dx.fill(); }
+  }
+  requestAnimationFrame(dustLoop);
+}
+/* ---------- layout scale ---------- */
+const root = $("#root"); let S = 1;
+function resize() { S = Math.min(innerWidth / 1600, innerHeight / 900); root.style.transform = `scale(${S})`; sizeDust(); }
+addEventListener("resize", resize); resize();
+const toScreen = (x, y) => { const r = root.getBoundingClientRect(); return [r.left + x * S, r.top + y * S]; };
+/* ---------- backgrounds: camera moves ---------- */
+const BG = { plain: $("#bg-plain"), usa: $("#bg-usa"), fr: $("#bg-fr"), ee: $("#bg-ee"), court: $("#bg-court"), vote: $("#bg-vote") };
+let curBg = null; const drift = new Map();
+function kenBurns(el) { drift.get(el)?.kill(); const dir = Math.random() < 0.5 ? -1 : 1; drift.set(el, gsap.fromTo(el, { scale: 1.06, xPercent: 0 }, { scale: 1.0, xPercent: dir * 1.2, duration: D(16), ease: "sine.inOut", overwrite: false })); }
+function hideSplit() { gsap.to(["#bg-splitL", "#bg-splitR"], { opacity: 0, duration: D(0.8) }); }
+// dolly forward: old frame rushes past the camera, new frame settles in
+function dolly(name, dim) {
+  const el = BG[name]; if (el === curBg) { gsap.to(el, { filter: `blur(${dim ? 6 : 0}px) brightness(${dim ? 0.7 : 1})`, duration: D(1.2) }); return; }
+  const old = curBg; curBg = el; hideSplit();
+  if (old) { drift.get(old)?.kill(); gsap.to(old, { scale: 1.35, opacity: 0, filter: "blur(14px)", duration: D(1.2), ease: "power3.in" }); }
+  gsap.fromTo("#flash", { opacity: 0 }, { opacity: 0.8, duration: D(0.55), ease: "power2.in", yoyo: true, repeat: 1 });
+  gsap.fromTo(el, { opacity: 0, scale: 1.25, filter: `blur(16px) brightness(${dim ? 0.7 : 1})` }, { opacity: 1, scale: 1.06, filter: `blur(${dim ? 6 : 0}px) brightness(${dim ? 0.7 : 1})`, duration: D(1.7), delay: D(0.45), ease: "expo.out", onComplete: () => kenBurns(el) });
+}
+// lateral camera move between places (Taust)
+function pan(name, back) {
+  const el = BG[name], old = curBg; if (el === old) return; curBg = el;
+  const d = back ? -1 : 1;
+  if (old) { drift.get(old)?.kill(); gsap.to(old, { xPercent: -14 * d, scale: 1.12, filter: "blur(10px)", opacity: 0, duration: D(1.4), ease: "power3.inOut" }); }
+  gsap.fromTo(el, { opacity: 1, xPercent: 14 * d, scale: 1.12, filter: "blur(10px)", clipPath: back ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" }, { xPercent: 0, scale: 1.06, filter: "blur(0px)", clipPath: "inset(0 0% 0 0%)", duration: D(1.5), ease: "expo.inOut", onComplete: () => kenBurns(el) });
+}
+// split screen for USA vs France
+function split() {
+  const old = curBg; curBg = null; if (old) { drift.get(old)?.kill(); gsap.to(old, { scale: 1.3, opacity: 0, filter: "blur(14px)", duration: D(1.1), ease: "power3.in" }); }
+  gsap.fromTo("#bg-splitL", { opacity: 1, clipPath: "polygon(0 0, 0% 0, 0% 100%, 0 100%)", scale: 1.15 }, { clipPath: "polygon(0 0, 54% 0, 46% 100%, 0 100%)", scale: 1.04, duration: D(1.6), delay: D(0.3), ease: "expo.inOut" });
+  gsap.fromTo("#bg-splitR", { opacity: 1, clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)", scale: 1.15 }, { clipPath: "polygon(54.3% 0, 100% 0, 100% 100%, 46.3% 100%)", scale: 1.04, duration: D(1.6), delay: D(0.45), ease: "expo.inOut" });
+}
+/* ---------- title: buildings rise out of the ground with a rumble ---------- */
+let rumbleAmp = { v: 0 };
+gsap.ticker.add(() => { const a = rumbleAmp.v; if (a > 0.05) gsap.set("#world, #rise", { x: (Math.random() - 0.5) * a, y: (Math.random() - 0.5) * a * 0.7 }); });
+function riseIntro() {
+  const bs = $$("#rise .b img"), sh = $$("#rise .shadow"), lb = $$("#rise .lbl");
+  gsap.set(bs, { yPercent: 105 }); gsap.set(lb, { opacity: 0, y: 20 });
+  const tl = gsap.timeline({ delay: D(0.9) });
+  bs.forEach((img, i) => {
+    const at = i * 0.75;
+    tl.to(rumbleAmp, { v: 9, duration: 0.25, ease: "power2.out" }, at)
+      .to(img, { yPercent: 0, duration: D(2.4), ease: "power4.out" }, at)
+      .to(sh[i], { opacity: 1, duration: 1.6 }, at + 0.3)
+      .to(rumbleAmp, { v: 0, duration: 2.2, ease: "power2.out" }, at + 0.35)
+      .call(() => { const box = img.parentElement, x = parseFloat(box.style.left) + box.offsetWidth / 2, y = parseFloat(box.style.top) + box.offsetHeight; const [sx, sy] = toScreen(x, y); let n = 0; const iv = setInterval(() => { emit(sx, sy - 10 * S, 7, box.offsetWidth * S * 0.9); if (++n > 16) clearInterval(iv); }, 60); }, null, at);
+  });
+  tl.to(lb, { opacity: 1, y: 0, duration: D(1.0), stagger: 0.15, ease: "expo.out" }, 2.9);
+  tl.call(() => gsap.set("#world, #rise", { x: 0, y: 0 }));
+}
+/* ---------- text animations ---------- */
+const scenes = $$(".scene");
+$$(".split").forEach((el) => { const walk = (node) => [...node.childNodes].forEach((n) => { if (n.nodeType === 3) { const f = document.createDocumentFragment(); n.textContent.split(/(\s+)/).forEach((w) => { if (!w) return; if (/^\s+$/.test(w)) f.append(w); else { const o = document.createElement("span"); o.className = "w"; const i = document.createElement("span"); i.textContent = w; o.append(i); f.append(o); } }); n.replaceWith(f); } else walk(n); }); walk(el); });
+function showEl(el, delay = 0) {
+  if (el.classList.contains("custom")) return; gsap.killTweensOf(el);
+  if (el.classList.contains("split")) { gsap.set(el, { opacity: 1, y: 0, filter: "none" }); gsap.fromTo(el.querySelectorAll(".w>span"), { yPercent: 115, rotate: 5 }, { yPercent: 0, rotate: 0, duration: D(1.3), delay, stagger: 0.07, ease: "expo.out" }); return; }
+  const from = el.dataset.from === "left" ? { x: -90 } : el.dataset.from === "right" ? { x: 90 } : { y: 50 };
+  gsap.fromTo(el, { opacity: 0, filter: "blur(12px)", scale: 0.96, ...from }, { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)", duration: D(1.2), delay, ease: "expo.out" });
+}
+function hideEl(el, delay = 0) { gsap.killTweensOf(el); gsap.to(el, { opacity: 0, y: -30, scale: 0.98, filter: "blur(10px)", duration: D(0.6), delay, ease: "power3.in" }); }
+const steps = []; scenes.forEach((s, i) => { for (let k = 0; k < +s.dataset.steps; k++) steps.push([i, k]); });
+let cur = -1;
+const els = (s, f) => $$("[data-s]", s).filter(f);
+const hooks = {
+  1(k, back) {
+    $$(".pane", scenes[1]).forEach((p, i) => { if (i === k) { gsap.set(p, { display: "block" }); gsap.fromTo(p.children, { opacity: 0, y: back ? -36 : 36, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: D(1.1), delay: D(0.55), stagger: 0.09, ease: "expo.out" }); } else if (getComputedStyle(p).display !== "none") gsap.to(p.children, { opacity: 0, y: back ? 36 : -36, filter: "blur(8px)", duration: D(0.45), stagger: 0.03, ease: "power3.in", onComplete: () => gsap.set(p, { display: "none" }) }); });
+    $$(".pol", scenes[1]).forEach((p, i) => { if (i === k) gsap.fromTo(p, { opacity: 0, y: 120, rotate: (i - 1) * 8 - 10, scale: 0.9 }, { opacity: 1, y: 0, rotate: [-4, 3, -2][i], scale: 1, duration: D(1.4), delay: D(0.8), ease: "expo.out" }); else gsap.to(p, { opacity: 0, y: -60, duration: D(0.5), ease: "power3.in" }); });
+  },
+  4(k) {
+    const cards = $$(".src", scenes[4]), pr = $("#principle");
+    if (k >= 1) gsap.to(cards, { x: (i) => (1 - i) * 470, scale: 0.35, opacity: 0, filter: "blur(14px)", duration: D(1.0), ease: "power3.in", stagger: 0.05 });
+    else gsap.to(cards, { x: 0, scale: 1, opacity: 1, filter: "blur(0px)", duration: D(1.0), ease: "expo.out" });
+    if (k === 0) gsap.to(pr, { opacity: 0, scale: 0.6, filter: "blur(14px)", duration: D(0.5) });
+    if (k >= 1 && +gsap.getProperty(pr, "opacity") < 0.99) gsap.fromTo(pr, { opacity: 0, scale: 0.3, filter: "blur(20px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: D(1.4), delay: D(0.65), ease: "expo.out" });
+    gsap.to(pr, { top: k >= 2 ? 250 : 330, duration: D(1.3), ease: "expo.inOut" });
+    gsap.to("#strike i", { scaleX: k >= 4 ? 1 : 0, duration: D(0.8), ease: "power3.inOut", delay: k >= 4 ? 0.3 : 0 });
+  },
+  5(k) { gsap.to("#flowline", { strokeDashoffset: 1400 - Math.min(k, 3) * (1388 / 3) - 12, duration: D(1.4), ease: "expo.inOut" }); },
+  6(k) {
+    $$(".flip", scenes[6]).forEach((c) => { const on = k >= +c.dataset.flip, th = $(".then", c), nw = $(".now", c);
+      gsap.to(th, { opacity: on ? 0 : 1, y: on ? -28 : 0, filter: on ? "blur(8px)" : "blur(0px)", duration: D(0.6), ease: "power3.inOut" });
+      gsap.to(nw, { opacity: on ? 1 : 0, y: on ? 0 : 28, filter: on ? "blur(0px)" : "blur(8px)", duration: D(1.0), delay: on ? 0.25 : 0, ease: "expo.out" }); });
+  },
+};
+function go(n) {
+  if (n < 0 || n >= steps.length || n === cur) return;
+  const back = n < cur, [si, k] = steps[n], prev = cur >= 0 ? steps[cur] : null; cur = n;
+  const s = scenes[si];
+  if (!prev || prev[0] !== si) {
+    if (prev) { const ps = scenes[prev[0]]; ps.classList.remove("on"); els(ps, (e) => +gsap.getProperty(e, "opacity") > 0).forEach((e, i) => hideEl(e, i * 0.025)); if (prev[0] === 1) gsap.to(".pol", { opacity: 0, y: -60, duration: D(0.5), ease: "power3.in" }); if (prev[0] === 0 || prev[0] === 8) gsap.to("#rise", { opacity: 0, scale: 1.25, filter: "blur(10px)", duration: D(1.0), ease: "power3.in" }); }
+    s.classList.add("on");
+    els(s, (e) => +e.dataset.s > k).forEach((e) => gsap.set(e, { opacity: 0 }));
+    els(s, (e) => +e.dataset.s <= k).forEach((e, i) => showEl(e, 0.8 + i * 0.08));
+    const bgs = s.dataset.bg.split(",");
+    if (bgs[0] === "split") split(); else if (si === 1 && prev && prev[0] === 1) pan(bgs[k], back); else dolly(bgs[Math.min(k, bgs.length - 1)], s.dataset.dim);
+    if (si === 0 || si === 8) { if (prev) gsap.fromTo("#rise", { opacity: 0, scale: 0.92, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: D(1.6), delay: D(0.5), ease: "expo.out" }); }
+  } else {
+    if (!back) els(s, (e) => +e.dataset.s === k).forEach((e, i) => showEl(e, i * 0.08));
+    else els(s, (e) => +e.dataset.s === k + 1).forEach((e) => hideEl(e));
+    if (si === 1) pan(s.dataset.bg.split(",")[k], back);
+  }
+  if (hooks[si]) hooks[si](k, back);
+  $("#bar i").style.width = ((n + 1) / steps.length) * 100 + "%";
+  $("#count").textContent = String(n + 1).padStart(2, "0") + " / " + steps.length;
+  $("#notes").textContent = s.dataset.notes || "";
+}
+const next = () => go(cur + 1), prev = () => go(cur - 1);
+addEventListener("keydown", (e) => {
+  if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) { if (e.target.closest && e.target.closest(".opt")) return; e.preventDefault(); next(); }
+  else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === "n" || e.key === "N") toggleNotes(); else if (e.key === "f" || e.key === "F") full();
+});
+document.addEventListener("click", (e) => { if (e.target.closest("button,a")) return; next(); });
+let tx0 = null; addEventListener("touchstart", (e) => (tx0 = e.touches[0].clientX), { passive: true });
+addEventListener("touchend", (e) => { if (tx0 == null) return; const d = e.changedTouches[0].clientX - tx0; if (Math.abs(d) > 50) (d < 0 ? next : prev)(); tx0 = null; });
+$("#bNext").onclick = next; $("#bPrev").onclick = prev;
+function toggleNotes() { const n = $("#notes"); n.hidden = !n.hidden; }
+$("#bNotes").onclick = toggleNotes;
+function full() { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (_) {} }
+$("#bFull").onclick = full;
+$$(".quiz").forEach((q) => {
+  const ok = +q.dataset.ok, fb = $(".fb", q);
+  $$(".opt", q).forEach((b, i) => b.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (i === ok) {
+      $$(".opt", q).forEach((o) => o.classList.remove("bad")); b.classList.add("good"); fb.textContent = fb.dataset.good; fb.style.color = "var(--sage)";
+      gsap.fromTo(b, { scale: 0.94 }, { scale: 1, duration: D(1), ease: "elastic.out(1,0.45)" });
+      const r = b.getBoundingClientRect(); emit(r.left + r.width / 2, r.top + r.height / 2, 26, r.width);
+    } else {
+      b.classList.add("bad"); fb.textContent = "Vale – proovi uuesti!"; fb.style.color = "var(--wrong)";
+      gsap.fromTo(b, { x: -14 }, { x: 0, duration: D(0.7), ease: "elastic.out(1.2,0.25)" });
+      setTimeout(() => b.classList.remove("bad"), 1400);
+    }
+  }));
+});
+/* ---------- boot after images load ---------- */
+const srcs = ["plain", "usa", "fr", "ee", "court", "vote"].map((n) => `img/${n}.jpg`).concat(["img/cap.webp", "img/bas.webp", "img/too.webp", "img/h_usa.jpg", "img/h_bastille.jpg", "img/h_ddhc.jpg"]);
+Promise.all(srcs.map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; }))).then(() => {
+  $$("[data-s]").forEach((e) => gsap.set(e, { opacity: 0 }));
+  gsap.set($$(".pane", scenes[1]), { display: "none" }); gsap.set($$(".pol"), { opacity: 0 }); gsap.set("#principle", { opacity: 0 });
+  gsap.to("#load", { opacity: 0, duration: 0.8, onComplete: () => $("#load").remove() });
+  dustLoop(); riseIntro(); go(0);
+  gsap.to("#hint", { opacity: 1, duration: 1, delay: 3.5 }); gsap.to("#hint", { opacity: 0, duration: 1, delay: 10 });
+});
+})();
+</script>
+</body>
+</html>
