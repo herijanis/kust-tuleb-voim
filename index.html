@@ -48,6 +48,9 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 .tl li{display:grid;grid-template-columns:88px 1fr;gap:14px;font-size:25px;line-height:1.4}
 .tl b{font:600 italic 27px/1.3 var(--display);color:var(--c)}
 .pane{position:absolute;inset:30px 36px}
+.gcard{top:468px;width:470px;height:400px;padding:24px 28px}
+.gyear{font:500 76px/.9 var(--display);letter-spacing:-.03em;color:var(--c)}
+.gtl{margin-top:16px;gap:12px}.gtl li{grid-template-columns:76px 1fr;font-size:23px;line-height:1.3}.gtl b{font-size:24px}
 .tbl{position:absolute;left:64px;top:206px;width:1472px;display:grid;grid-template-columns:250px repeat(3,1fr);border-radius:20px;overflow:hidden}
 .tbl>div{background:rgba(20,14,11,.9);padding:15px 18px;font-size:22px;line-height:1.36;border-top:1px solid rgba(255,236,214,.12);border-left:1px solid rgba(255,236,214,.12)}
 .tbl .h{font:800 16px/1.25 var(--body);letter-spacing:.14em;text-transform:uppercase;border-top:0;color:var(--c);background:rgba(38,28,22,.94)}
@@ -115,19 +118,17 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 </section>
 
 <!-- 1 TAUST -->
-<section class="scene" data-steps="3" data-notes="USA: Briti parlament pani kolooniatele makse, aga kolonistidel polnud seal esindajaid; 1776 iseseisvus, 1787 põhiseadus jagas võimu, 1791 vabadused. PRANTSUSMAA: riigivõlg, kolmas seisus kandis maksukoormust; 1789 Rahvuskogu ja deklaratsioon, 1791 kuninga võim piiratud, 1792 vabariik ja terror. EESTI: kõrgeim võim on rahval, valivad kodanikud alates 18, võim on jagatud, kohus sõltumatu.">
-  <div data-s="0" class="panel" style="left:80px;top:110px;width:720px;height:610px">
-    <div class="pane" style="--c:var(--usa)"><span class="tag">Taust · USA · allikas A</span><div class="year">1776</div>
-      <ul class="tl"><li><b>1776</b><span>Iseseisvusdeklaratsioon. Kolonistidel polnud Briti parlamendis esindajaid</span></li><li><b>1783</b><span>Suurbritannia tunnustab iseseisvust</span></li><li><b>1787</b><span>Põhiseadus: Kongress, president ja kohtud</span></li><li><b>1791</b><span>Sõna-, usu- ja kogunemisvabadus</span></li></ul></div>
-    <div class="pane" style="--c:var(--fr)"><span class="tag">Taust · Prantsusmaa · allikas B</span><div class="year">1789</div>
-      <ul class="tl"><li><b>1789</b><span>Kolmas seisus kuulutab end Rahvuskoguks. „Inimese ja kodaniku õiguste deklaratsioon“</span></li><li><b>1791</b><span>Põhiseadus piirab kuninga võimu</span></li><li><b>1792</b><span>Vabariik, seejärel jakobiinide terror</span></li></ul></div>
-    <div class="pane" style="--c:var(--ee)"><span class="tag">Taust · Eesti · allikas C</span><div class="year">1992</div>
-      <ul class="tl"><li><b>§ 1</b><span>Kõrgeima riigivõimu kandja on rahvas</span></li><li><b>§ 57</b><span>Riigikogu valivad kodanikud alates 18, salaja (§ 60)</span></li><li><b>§ 4</b><span>Võimud tasakaalustavad üksteist, kohus on sõltumatu (§ 146)</span></li><li><b>§ 45</b><span>Sõnavabadus, võrdsus (§ 12), õigus kohtusse (§ 15)</span></li></ul></div>
-  </div>
+<section class="scene" data-steps="1" data-at="0,0.35,0.7" data-notes="Vasakult paremale: USA – kolonistidel polnud Briti parlamendis esindajaid, 1776 iseseisvus, 1787 põhiseadus jagas võimu, 1791 vabadused. PRANTSUSMAA – kolmas seisus kandis maksukoormust; 1789 Rahvuskogu ja deklaratsioon, 1791 kuninga võim piiratud, 1792 vabariik ja terror. EESTI – kõrgeim võim on rahval, valivad kodanikud alates 18, kohus on sõltumatu.">
+  <div data-s="0" class="panel gcard" style="left:34px;--c:var(--usa)"><span class="tag">USA · allikas A</span><div class="gyear">1776</div>
+    <ul class="tl gtl"><li><b>1776</b><span>Iseseisvusdeklaratsioon</span></li><li><b>1787</b><span>Põhiseadus: Kongress, president, kohtud</span></li><li><b>1791</b><span>Sõna-, usu- ja kogunemisvabadus</span></li></ul></div>
+  <div data-s="1" class="panel gcard" style="left:565px;--c:var(--fr)"><span class="tag">Prantsusmaa · allikas B</span><div class="gyear">1789</div>
+    <ul class="tl gtl"><li><b>1789</b><span>Rahvuskogu ja õiguste deklaratsioon</span></li><li><b>1791</b><span>Põhiseadus piirab kuninga võimu</span></li><li><b>1792</b><span>Vabariik, seejärel terror</span></li></ul></div>
+  <div data-s="2" class="panel gcard" style="left:1096px;--c:var(--ee)"><span class="tag">Eesti · allikas C</span><div class="gyear">1992</div>
+    <ul class="tl gtl"><li><b>§ 1</b><span>Kõrgeim võim on rahval</span></li><li><b>§ 57</b><span>Valivad kodanikud alates 18</span></li><li><b>§ 146</b><span>Kohus on sõltumatu</span></li></ul></div>
 </section>
 
 <!-- 2 ÜL 1 -->
-<section class="scene" data-steps="5" data-notes="Ülesanne 1. Iga klõps toob ühe rea. Kõigis kolmes on võim rahvalt. Suurim erinevus: kes sai valida – USA-s ja Prantsusmaal ainult osa mehi, Eestis kõik kodanikud alates 18. Võim on kõigis jagatud, Eestis on kohus selgelt sõltumatu.">
+<section class="scene" data-steps="1" data-at="0,0.9,1.7,2.5,3.3" data-notes="Ülesanne 1. Read ilmuvad ise ükshaaval. Kõigis kolmes on võim rahvalt. Suurim erinevus: kes sai valida – USA-s ja Prantsusmaal ainult osa mehi, Eestis kõik kodanikud alates 18. Võim on kõigis jagatud, Eestis on kohus selgelt sõltumatu.">
   <div data-s="0" class="kick" style="position:absolute;left:66px;top:62px">Ülesanne 1</div>
   <h2 data-s="0" class="split" style="position:absolute;left:62px;top:92px">Võrdlustabel</h2>
   <div class="tbl" data-s="0">
@@ -140,7 +141,7 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 </section>
 
 <!-- 3 ÜL 2 -->
-<section class="scene" data-steps="4" data-notes="Ülesanne 2. Kolonistid tahtsid ise otsustada oma maksude üle, sest Briti parlamendis polnud neil esindajaid. Prantsuse kolmas seisus kandis suurimat maksukoormust ja nõudis õigust rääkida kogu rahva nimel. Sarnasus: kes maksab, peab saama otsustada. Erinevus: ameeriklased lahkusid Suurbritannia alt, prantslased muutsid oma riiki seestpoolt.">
+<section class="scene" data-steps="1" data-at="0,1.3,2.1,2.9" data-notes="Ülesanne 2. Kolonistid tahtsid ise otsustada oma maksude üle, sest Briti parlamendis polnud neil esindajaid. Prantsuse kolmas seisus kandis suurimat maksukoormust ja nõudis õigust rääkida kogu rahva nimel. Sarnasus: kes maksab, peab saama otsustada. Erinevus: ameeriklased lahkusid Suurbritannia alt, prantslased muutsid oma riiki seestpoolt.">
   <div data-s="0" class="kick" style="position:absolute;left:82px;top:66px">Ülesanne 2</div>
   <h2 data-s="0" class="split" style="position:absolute;left:78px;top:96px;width:1440px;font-size:74px">Kuidas maksutülist sai <em>vaidlus võimu üle?</em></h2>
   <div data-s="0" data-from="left" class="panel" style="left:80px;top:286px;width:700px"><span class="tag" style="--c:var(--usa)">Ameerika kolonistid</span><p>Tahtsid ise otsustada, milliseid makse maksta. Briti parlamendis polnud neil ühtegi esindajat.</p><p style="margin-top:12px;color:var(--usa);font-weight:800">Uued maksud → sõda → 1776</p></div>
@@ -151,7 +152,7 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 </section>
 
 <!-- 4 ÜL 3 -->
-<section class="scene" data-steps="5" data-notes="Ülesanne 3. Klõps 1: kolm allikat sulanduvad üheks põhimõtteks – võim pärineb rahvalt. Klõps 2: kuidas see Eestis valimistel toimib. Klõpsud 3–4: ajalooline näide – paberil võrdsus, päriselt said hääletada ainult osa mehi.">
+<section class="scene" data-steps="1" data-at="0,2.2,3.6,4.6,5.6" data-notes="Ülesanne 3. Kolm allikat sulanduvad ise üheks põhimõtteks – võim pärineb rahvalt. Siis: kuidas see Eestis toimib, ja ajalooline näide – paberil võrdsus, päriselt said hääletada ainult osa mehi.">
   <div data-s="0" class="kick" style="position:absolute;left:82px;top:66px">Ülesanne 3</div>
   <h2 data-s="0" class="split" style="position:absolute;left:78px;top:96px">Mis on kõigis kolmes <em>sama?</em></h2>
   <div class="abc" data-s="0" style="position:absolute;left:80px;top:250px;width:1440px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px">
@@ -166,7 +167,7 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 </section>
 
 <!-- 5 ÜL 4 -->
-<section class="scene" data-steps="5" data-notes="Ülesanne 4. Ajalehe keelamine puudutaks sõnavabadust (§ 45). Ajaleht saaks pöörduda kohtusse (§ 15), lõpuks Riigikohtusse. Kohtu sõltumatus (§ 146) on tähtis, sest kohus otsustab seaduse järgi, mitte Riigikogu enamuse soovi järgi. Küsige klassilt: mis juhtuks, kui kohtunikke saaks vallandada valitsus?">
+<section class="scene" data-steps="1" data-at="0,0.8,1.6,2.4,3.4" data-notes="Ülesanne 4. Ajalehe keelamine puudutaks sõnavabadust (§ 45). Ajaleht saaks pöörduda kohtusse (§ 15), lõpuks Riigikohtusse. Kohtu sõltumatus (§ 146) on tähtis, sest kohus otsustab seaduse järgi, mitte Riigikogu enamuse soovi järgi. Küsige klassilt: mis juhtuks, kui kohtunikke saaks vallandada valitsus?">
   <div data-s="0" class="kick" style="position:absolute;left:82px;top:66px">Ülesanne 4 · olukord</div>
   <h2 data-s="0" class="split" style="position:absolute;left:78px;top:96px;width:1440px">Riigikogu tahab <em>keelata ajalehe</em></h2>
   <svg data-s="0" style="position:absolute;left:80px;top:250px;overflow:visible" width="1440" height="20" aria-hidden="true"><path id="flowline" d="M10 10 H1430" stroke="#E8B970" stroke-width="4" stroke-linecap="round" fill="none" stroke-dasharray="1420" stroke-dashoffset="1420"/></svg>
@@ -178,7 +179,7 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 </section>
 
 <!-- 6 ÜL 5 -->
-<section class="scene" data-steps="6" data-notes="Ülesanne 5. Ühendav põhimõte: võim pärineb rahvalt (A, B, C). Igas kaardis kõigepealt „siis“, järgmine klõps muudab selle „nüüd“-iks. Erinevus 1: kes saab hääletada. Erinevus 2: kuidas õigusi kaitsta. Vastus: põhiidee on sama, aga täna kehtib see kõigile ja on kohtus kaitstud.">
+<section class="scene" data-steps="1" data-at="0,0.9,1.5,3.0,3.8,4.8" data-notes="Ülesanne 5. Ühendav põhimõte: võim pärineb rahvalt (A, B, C). Kaardid näitavad kõigepealt „siis“ ja muutuvad ise „nüüd“-iks. Erinevus 1: kes saab hääletada. Erinevus 2: kuidas õigusi kaitsta. Vastus: põhiidee on sama, aga täna kehtib see kõigile ja on kohtus kaitstud.">
   <div data-s="0" class="kick" style="position:absolute;left:82px;top:66px">Ülesanne 5</div>
   <h2 data-s="0" class="split" style="position:absolute;left:78px;top:96px">Järeldus</h2>
   <div data-s="0" class="panel" style="left:80px;top:218px;width:1440px;padding:22px 34px;border-color:rgba(232,185,112,.55)"><p style="font-size:30px"><b style="font:500 italic 38px/1 var(--display);color:var(--gold)">Ühendab:</b> võim pärineb rahvalt ja inimestel on õigused (A, B, C)</p></div>
@@ -224,6 +225,6 @@ h1 em,h2 em{font-style:italic;color:var(--gold);font-weight:500}
 <script src="lib/three.min.js"></script>
 <script src="lib/GLTFLoader.js"></script>
 <script src="lib/meshopt_decoder.js"></script>
-<script src="app.js?v=7"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

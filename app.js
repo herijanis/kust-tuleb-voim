@@ -116,7 +116,7 @@ function buildGallery() {
   const pl = new THREE.PointLight(0xFFB27A, 0.5, 60); pl.position.set(0, 11, 8); gal.add(pl);
 }
 // gallery camera poses: wide shot of a painting (painting sits right of the text panel) / painting fills the whole screen
-function galPose(i) { const x = G.x + PAINT[i].x, y = G.y + 6; return [x - 8.2, y - 0.2, G.z + 10.5, x - 5.0, y, WALL, 40]; }
+function galPose() { return [G.x, G.y + 2.6, G.z + 22, G.x, G.y + 2.2, WALL, 40]; }
 function coverPose(i) {
   const p = PAINT[i], x = G.x + p.x, y = G.y + 6, v = (fitFov(40) * Math.PI) / 180, hz = 2 * Math.atan(Math.tan(v / 2) * camera.aspect);
   const d = Math.min(p.h / 2 / Math.tan(v / 2), p.w / 2 / Math.tan(hz / 2)) * 0.97;
@@ -204,15 +204,9 @@ function showEl(el, delay = 0) {
 }
 function hideEl(el, delay = 0) { gsap.killTweensOf(el); if (el.classList.contains("split")) gsap.killTweensOf(el.querySelectorAll(".w>span")); gsap.to(el, { opacity: 0, y: -20, duration: D(0.45), delay: D(delay), ease: "power2.in" }); }
 const steps = []; scenes.forEach((s, i) => { for (let k = 0; k < +s.dataset.steps; k++) steps.push([i, k]); });
-let cur = -1;
+let cur = -1, autos = [];
 const els = (s, f) => $$("[data-s]", s).filter(f);
 const hooks = {
-  1(k, back) {
-    $$(".pane", scenes[1]).forEach((p, i) => {
-      if (i === k) { gsap.set(p, { display: "block" }); gsap.fromTo(p.children, { opacity: 0, y: back ? -30 : 30 }, { opacity: 1, y: 0, duration: D(1.0), delay: D(0.55), stagger: 0.08, ease: "expo.out", overwrite: true }); }
-      else if (p.style.display !== "none") gsap.to(p.children, { opacity: 0, y: back ? 30 : -30, duration: D(0.4), stagger: 0.03, ease: "power2.in", overwrite: true, onComplete: () => gsap.set(p, { display: "none" }) });
-    });
-  },
   4(k) {
     const cards = $$(".src", scenes[4]), pr = $("#principle");
     if (k >= 1) gsap.to(cards, { x: (i) => (1 - i) * 480, scale: 0.4, opacity: 0, duration: D(0.9), ease: "power3.in", stagger: 0.05, overwrite: true });
@@ -244,11 +238,11 @@ function world(si, k, prev, back, instant) {
   const from = prev ? prev[0] : -1;
   orbitOn = false;
   gsap.to(lbls, { opacity: HAS3D && (si === 0 || si === 8) ? 1 : 0, duration: D(0.8), overwrite: true });
-  shade(si === 1 ? 1 : 0, si >= 2 && si <= 7 ? 1 : 0);
-  dimTo({ 2: 0.5, 3: 0.12, 4: 0.3, 5: 0.25, 6: 0.32, 7: 0.5 }[si] || 0);
+  shade(0, si >= 2 && si <= 7 ? 1 : 0);
+  dimTo({ 1: HAS3D ? 0 : 0.35, 2: 0.5, 3: 0.12, 4: 0.3, 5: 0.25, 6: 0.32, 7: 0.5 }[si] || 0);
 
   if (!HAS3D) { // photo-only mode
-    const n = [["plain"], ["h_usa", "h_bastille", "ee"], ["ee"], null, ["vote"], ["court"], ["plain"], ["plain"], ["plain"]][si];
+    const n = [["plain"], ["plain"], ["ee"], null, ["vote"], ["court"], ["plain"], ["plain"], ["plain"]][si];
     if (si === 3) split(); else photo(n[Math.min(k, n.length - 1)], instant ? 0.01 : 1.4);
     return;
   }
@@ -265,13 +259,12 @@ function world(si, k, prev, back, instant) {
   }
   if (si === 1) { // inside the gallery
     photosOff(0.8); canvasOn(true, 0.8);
-    if (prev && from === 1) { if (!wtl || !wtl.isActive()) newTL(); else { wtl.progress(1); newTL(); } wtl.to(cam, PV(galPose(k), 2.2, "power3.inOut")); return; }
     const tl = newTL();
     if (from === 0) { // glide toward the Capitol, dip, open inside the hall
       const g = L[0]; const box = g ? new THREE.Box3().setFromObject(g) : null; const cx = box ? (box.min.x + box.max.x) / 2 : -24, cz = box ? box.max.z : 8, cy = g ? Math.min(9, g.userData.h * 0.45) : 6;
       tl.to(cam, PV([cx + 2, cy, cz + 20, cx, cy, cz - 6, 30], 1.5, "power2.in"))
         .to("#fade", { opacity: 1, duration: D(0.55), ease: "power2.in" }, "-=0.55")
-        .call(() => setCam([G.x - 2, G.y + 6.8, G.z + 18, G.x - 2, G.y + 6, WALL, 46]))
+        .call(() => setCam([G.x - 6, G.y + 5, G.z + 30, G.x, G.y + 3.5, WALL, 46]))
         .to("#fade", { opacity: 0, duration: D(1.0), ease: "power2.out" })
         .to(cam, PV(galPose(k), 2.6, "expo.out"), "<");
     } else if (from === 2) { // coming back out of the painting
@@ -306,14 +299,17 @@ function go(n) {
     els(s, (e) => +e.dataset.s > k).forEach((e) => { gsap.killTweensOf(e); gsap.set(e, { opacity: 0 }); });
     const from = prev ? prev[0] : -1;
     const wait = !prev ? 1.2 : !HAS3D ? 0.6 : si === 1 && from === 0 ? 2.2 : si === 2 && from === 1 && !back ? 2.0 : 0.7;
-    els(s, (e) => +e.dataset.s <= k).forEach((e, i) => showEl(e, wait + i * 0.06));
     world(si, k, prev, back);
-  } else {
-    if (!back) els(s, (e) => +e.dataset.s === k).forEach((e, i) => showEl(e, i * 0.07));
-    else els(s, (e) => +e.dataset.s === k + 1).forEach((e) => hideEl(e));
-    if (si === 1) world(si, k, prev, back);
+    // everything inside the slide plays by itself, one part after another (one click per slide)
+    autos.forEach((a) => a.kill()); autos = [];
+    els(s, (e) => +e.dataset.s > 0).forEach((e) => { gsap.killTweensOf(e); gsap.set(e, { opacity: 0 }); });
+    const at = (s.dataset.at || "0").split(",").map(Number);
+    at.forEach((t, kk) => autos.push(gsap.delayedCall(D(wait + t), () => {
+      els(s, (e) => +e.dataset.s === kk).forEach((e, i) => showEl(e, i * 0.07));
+      if (hooks[si]) hooks[si](kk, false);
+    })));
+    if (hooks[si]) hooks[si](0, false);
   }
-  if (hooks[si]) hooks[si](k, back);
   $("#bar i").style.width = ((n + 1) / steps.length) * 100 + "%";
   $("#count").textContent = "SLAID " + (si + 1) + " / " + scenes.length;
   $("#notes").textContent = s.dataset.notes || "";
