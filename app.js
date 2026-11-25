@@ -289,6 +289,25 @@ function world(si, k, prev, back, instant) {
   if (si === 3) split(); else photo({ 2: "ee", 4: "vote", 5: "court" }[si]);
 }
 
+function groupsOf(s) { return (s.dataset.at || "0").split("|").map((g) => g.split(",").map(Number)); }
+function groupStart(s, g) { return groupsOf(s).slice(0, g).reduce((a, x) => a + x.length, 0); }
+function groupEnd(s, g) { return groupStart(s, g) + groupsOf(s)[g].length - 1; }
+// play one click's worth of sub-parts, each at its own time
+function playGroup(s, si, g, wait) {
+  autos.forEach((a) => a.kill()); autos = [];
+  const off = groupStart(s, g);
+  groupsOf(s)[g].forEach((t, j) => autos.push(gsap.delayedCall(D(wait + t), () => {
+    els(s, (e) => +e.dataset.s === off + j).forEach((e, i) => showEl(e, i * 0.07));
+    if (hooks[si]) hooks[si](off + j, false);
+  })));
+}
+// jump straight to how the slide looks after sub-part `last`
+function settle(s, si, last) {
+  els(s, (e) => +e.dataset.s <= last).forEach((e) => showEl(e, 0));
+  els(s, (e) => +e.dataset.s > last).forEach((e) => hideEl(e, 0));
+  if (hooks[si]) hooks[si](last, false);
+}
+
 function go(n) {
   if (n < 0 || n >= steps.length || n === cur) return;
   const back = n < cur, [si, k] = steps[n], prev = cur >= 0 ? steps[cur] : null; cur = n;
@@ -300,16 +319,13 @@ function go(n) {
     const from = prev ? prev[0] : -1;
     const wait = !prev ? 1.2 : !HAS3D ? 0.6 : si === 1 && from === 0 ? 2.2 : si === 2 && from === 1 && !back ? 2.0 : 0.7;
     world(si, k, prev, back);
-    // everything inside the slide plays by itself, one part after another (one click per slide)
-    autos.forEach((a) => a.kill()); autos = [];
+    // everything inside the slide plays by itself, one part after another; a "|" in data-at waits for a click
     els(s, (e) => +e.dataset.s > 0).forEach((e) => { gsap.killTweensOf(e); gsap.set(e, { opacity: 0 }); });
-    const at = (s.dataset.at || "0").split(",").map(Number);
-    at.forEach((t, kk) => autos.push(gsap.delayedCall(D(wait + t), () => {
-      els(s, (e) => +e.dataset.s === kk).forEach((e, i) => showEl(e, i * 0.07));
-      if (hooks[si]) hooks[si](kk, false);
-    })));
     if (hooks[si]) hooks[si](0, false);
-  }
+    if (k > 0) settle(s, si, groupEnd(s, k - 1));
+    playGroup(s, si, k, wait);
+  } else if (!back) playGroup(s, si, k, 0);
+  else { autos.forEach((a) => a.kill()); autos = []; settle(s, si, groupEnd(s, k)); }
   $("#bar i").style.width = ((n + 1) / steps.length) * 100 + "%";
   $("#count").textContent = "SLAID " + (si + 1) + " / " + scenes.length;
   $("#notes").textContent = s.dataset.notes || "";
